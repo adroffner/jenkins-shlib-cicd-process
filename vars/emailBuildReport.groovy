@@ -7,7 +7,7 @@
 
 def call(mailToList) {
     node {
-        mail to: mailToList,
+        mail to: mailToList.join(','),
         subject: "[CI Process][${currentBuild.currentResult}][Build ${env.BUILD_ID}][${env.JOB_NAME}] Jenkins Done",
         body: """
 
