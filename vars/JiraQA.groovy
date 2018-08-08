@@ -25,7 +25,7 @@ def getTicketIdFromBranch(String branch) {
 	return ticketId
 }
 
-def commentInTicket(String comment, ticketIdOrKey = null) {
+def commentInTicket(String comment, String ticketIdOrKey = null) {
 	// Read ticketId from current branch when none provided.
 	if (ticketIdOrKey != null) {
 		currTicket = ticketIdOrKey
@@ -47,7 +47,7 @@ def exampleStatusNameCodes = [ // The ID numbers must be strings.
 	'Closed': '6'
 ]
 
-def transitionTicket(moveToSwimlane, ticketIdOrKey = null, statusNameCodes = []) {
+def transitionTicket(String moveToSwimlane, String ticketIdOrKey = null, statusNameCodes = []) {
 
 	// statusNameCodes: Map swim-lane transition names to the internal IDs.
 	// The names should appear in the same order as the swim-lanes.
