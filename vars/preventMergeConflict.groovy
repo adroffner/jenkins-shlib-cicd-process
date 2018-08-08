@@ -1,9 +1,12 @@
-/* Merge Conflict Test.
+/* Prevent Merge Conflict.
  *
- * This DSL command performs a test merge step.
+ * This DSL command detects and prevents merge conflicts.
  *
- * The "develop" branch is merged into the current branch.
+ * The "mergeFrom" branch is merged into the current branch.
  * When this merge fails, it indicates a merge conflict.
+ *
+ * This should occur on Git working branches.
+ * The results of the merge into the branch are discarded.
  *
  * Plugins Required: "Git Plugin", "SSH Agent Plugin"
  */
@@ -17,6 +20,6 @@ def call(mergeFrom='develop', gitCredentials='git-credentials-id') {
                 sh "git checkout ${mergeFrom}"
                 sh "git pull"
                 sh "git checkout ${env.BRANCH_NAME}"
-                sh "git merge develop"
+                sh "git merge ${mergeFrom}"
         }
 }
