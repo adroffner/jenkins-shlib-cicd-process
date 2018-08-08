@@ -16,10 +16,12 @@ def call(String imageName) {
 
 	if (pushImage != null) {
 		if (env.BRANCH_NAME == 'develop') {
+			echo "Pushing QA Docker image for ${fullImageName} ..."
 			pushImage.push("${env.BUILD_ID}")
 		}
 
 		if (env.BRANCH_NAME == 'master') {
+			echo "Pushing latest Docker image for ${fullImageName} ..."
 			pushImage.push('latest')
 			jiraBuildReport "Pushed \"latest\" image \"${fullImageName}\" for master"
 		}
