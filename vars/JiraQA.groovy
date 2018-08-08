@@ -1,8 +1,12 @@
-/** Incubate Team JIRA Steps.
+/** JIRA Steps Quality Assurance with Git.
  *
- * This file adds Incubate-specific steps to the JIRA Steps Plugin DSL.
+ * This file adds Quality Assurance (QA) steps to the JIRA Steps Plugin DSL.
+ * Some QA reporting, etc., relates the Git working branch to the JIRA ticket.
  *
- * Required Plugins: JIRA Steps Plugin
+ * QA automation needs to report the Git branch build to JIRA.
+ * The current Git working branch is env.BRANCH_NAME and is implied here.
+ *
+ * Required Plugins: Git Plugin, JIRA Steps Plugin
  **/
 
 def getTicketIdFromBranch(String branch) {
@@ -14,6 +18,7 @@ def getTicketIdFromBranch(String branch) {
 		ticketId = parts[0..1].join('-')
 	}
 	else {
+		// TODO: neither "develop" nor "master" match the parser; are they needed?
 		ticketId = null
 	}
 
@@ -21,7 +26,7 @@ def getTicketIdFromBranch(String branch) {
 }
 
 def commentInTicket(String comment = '(blank comment)', ticketIdOrKey = null) {
-	// Read ticket-ID from current branch when none provided.
+	// Read ticketId from current branch when none provided.
 	if (ticketIdOrKey != null) {
 		currTicket = ticketIdOrKey
 	}
@@ -34,16 +39,18 @@ def commentInTicket(String comment = '(blank comment)', ticketIdOrKey = null) {
 	}
 }
 
-def transitionTicket(moveToSwimlane, ticketIdOrKey = null) {
+// Sample statusNameCodes for transitionTicket().
+def exampleStatusNameCodes = [ // The ID numbers must be strings.
+	'Backlog': '10101',
+	'On Hold': '10102',
+	'Code Review': '10106',
+	'Closed': '6'
+]
 
-	// Status: Map swim-lane transition names to the internal IDs.
+def transitionTicket(moveToSwimlane, ticketIdOrKey = null, statusNameCodes = []) {
+
+	// statusNameCodes: Map swim-lane transition names to the internal IDs.
 	// The names should appear in the same order as the swim-lanes.
-	def statusNameCodes = [ // The IDs must be strings.
-		'Backlog': '10101',
-		'On Hold': '10102',
-		'Code Review': '10106',
-		'Closed': '6'
-	]
 
 	// Read ticket-ID from current branch when none provided.
 	if (ticketIdOrKey != null) {
@@ -55,5 +62,7 @@ def transitionTicket(moveToSwimlane, ticketIdOrKey = null) {
 
 	def transId = statusNameCodes.get(moveToSwimlane)
 	def transitionInput = [ transition: [ id: transId ] ]
-	jiraTransitionIssue idOrKey: ticketId, input: transitionInput
+	if (transId != null) {
+		jiraTransitionIssue idOrKey: ticketId, input: transitionInput
+	}
 }
