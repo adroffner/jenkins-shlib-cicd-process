@@ -1,18 +1,37 @@
 /** Incubate Team JIRA Steps.
  *
  * This file adds Incubate-specific steps to the JIRA Steps Plugin DSL.
+ *
+ * Required Plugins: JIRA Steps Plugin
  **/
 
 def getTicketIdFromBranch(String branch) {
 	// Get JIRA Ticket-ID from Git Branch.
-	parts = branch.split('/')[1].split('-')
-	ticketId = parts[0..1].join('-')
+	// branch := 'feature/TIC-000-working-branch-topic'
+	parts = branch.split('/')
+	if (parts.length > 1) { 
+		parts = parts[1].split('-')
+		ticketId = parts[0..1].join('-')
+	}
+	else {
+		ticketId = null
+	}
+
 	return ticketId
 }
 
-def commentInTicket(String comment = '(blank comment)') {
-	currTicket = getTicketIdFromBranch(env.BRANCH_NAME)
-	jiraAddComment idOrKey: currTicket, comment: comment
+def commentInTicket(String comment = '(blank comment)', ticketIdOrKey = null) {
+	// Read ticket-ID from current branch when none provided.
+	if (ticketIdOrKey != null) {
+		currTicket = ticketIdOrKey
+	}
+	else {
+		currTicket = getTicketIdFromBranch(env.BRANCH_NAME)
+	}
+
+	if (currTicket != null) {
+		jiraAddComment idOrKey: currTicket, comment: comment
+	}
 }
 
 def transitionTicket(moveToSwimlane, ticketIdOrKey = null) {
