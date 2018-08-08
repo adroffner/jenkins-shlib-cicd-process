@@ -16,6 +16,7 @@ def call(String imageName) {
 		def fullName = fullImageName(imageName)
 
 		// docker.build(..) errors (https://issues.jenkins-ci.org/browse/JENKINS-31507)
-		sh "docker build -t ${fullName} ./"
+		// docker command requires "sudo" on this server?
+		sh "sudo docker build -t ${fullName} ./"
 	}
 }
