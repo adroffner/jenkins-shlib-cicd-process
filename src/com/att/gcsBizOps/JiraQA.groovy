@@ -9,6 +9,8 @@
  * Required Plugins: Git Plugin, JIRA Steps Plugin
  **/
 
+package com.att.gcsBizOps;
+
 def getTicketIdFromBranch(String branch) {
 	// Get JIRA Ticket-ID from Git Branch.
 	// branch := 'feature/TIC-000-working-branch-topic'
@@ -66,3 +68,5 @@ def transitionTicket(String moveToSwimlane, String ticketIdOrKey = null, statusN
 		jiraTransitionIssue idOrKey: ticketId, input: transitionInput
 	}
 }
+
+return this
