@@ -25,7 +25,7 @@ def getTicketIdFromBranch(String branch) {
 	return ticketId
 }
 
-def commentInTicket(String comment = '(blank comment)', ticketIdOrKey = null) {
+def commentInTicket(String comment, ticketIdOrKey = null) {
 	// Read ticketId from current branch when none provided.
 	if (ticketIdOrKey != null) {
 		currTicket = ticketIdOrKey
