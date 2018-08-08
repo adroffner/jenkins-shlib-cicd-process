@@ -1,8 +1,8 @@
 /* Prevent Merge Conflict.
  *
- * This DSL command detects and prevents merge conflicts.
+ * This DSL command detects and prevents Git merge conflicts.
  *
- * The "mergeFrom" branch is merged into the current branch.
+ * The "mergeFrom" branch, typically "develop", is merged into the current branch.
  * When this merge fails, it indicates a merge conflict.
  *
  * This should occur on Git working branches.
@@ -11,7 +11,7 @@
  * Plugins Required: "Git Plugin", "SSH Agent Plugin"
  */
 
-def call(mergeFrom='develop', gitCredentials='git-credentials-id') {
+def call(mergeFrom, gitCredentials = 'git-credentials-id') {
 	node {
 		// Use SSH-Agent Plugin to call git.
 		checkout scm
