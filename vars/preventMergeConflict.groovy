@@ -12,14 +12,16 @@
  */
 
 def call(mergeFrom='develop', gitCredentials='git-credentials-id') {
-	// Use SSH-Agent Plugin to call git.
-        checkout scm
-        sshagent(credentials: [gitCredentials]) {
-        	// Merge or fail on conflicts.
-                sh "git fetch"
-                sh "git checkout ${mergeFrom}"
-                sh "git pull"
-                sh "git checkout ${env.BRANCH_NAME}"
-                sh "git merge ${mergeFrom}"
+	node {
+		// Use SSH-Agent Plugin to call git.
+		checkout scm
+		sshagent(credentials: [gitCredentials]) {
+			// Merge or fail on conflicts.
+			sh "git fetch"
+			sh "git checkout ${mergeFrom}"
+			sh "git pull"
+			sh "git checkout ${env.BRANCH_NAME}"
+			sh "git merge ${mergeFrom}"
+		}
         }
 }

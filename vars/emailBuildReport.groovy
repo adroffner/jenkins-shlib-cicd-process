@@ -2,7 +2,7 @@
  *
  * E-mail the build report to interested parties.
  *
- * Required Plugins: Git Plugin, ??
+ * Required Plugins: "Git Plugin", mail?
  */
 
 def call(mailToList) {

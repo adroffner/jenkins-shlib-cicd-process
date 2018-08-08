@@ -3,7 +3,7 @@
  * Add a JIRA comment that gives a build report.
  * This report comment may be e-mailed to the Watchers list.
  *
- * Required Plugins: Git Plugin, JIRA Steps Plugin
+ * Required Plugins: "Git Plugin", "JIRA Steps Plugin"
  */
 
 def call(String commentText) {
