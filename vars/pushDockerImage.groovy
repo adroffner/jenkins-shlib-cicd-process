@@ -10,7 +10,6 @@
  */
 
 def call(String imageName) {
-    node {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def pushImage = docker.image(fullImageName)
 
@@ -26,5 +25,4 @@ def call(String imageName) {
 			jiraBuildReport "Pushed \"latest\" image \"${fullImageName}\" for master"
 		}
 	}
-    }
 }
