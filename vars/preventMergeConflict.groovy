@@ -8,6 +8,8 @@
  * This should occur on Git working branches.
  * The results of the merge into the branch are discarded.
  *
+ * DSL: preventMergeConflict("develop")
+ *
  * Plugins Required: "Git Plugin", "SSH Agent Plugin"
  */
 

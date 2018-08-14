@@ -2,6 +2,8 @@
  *
  * E-mail the build report to interested parties.
  *
+ * DSL: emailBuildReport(['user@example.com', 'admin@example.com'])
+ *
  * Required Plugins: "Git Plugin", mail?
  */
 

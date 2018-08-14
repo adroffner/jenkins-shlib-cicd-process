@@ -6,6 +6,8 @@
  * "devlop" tag is the current Jenkins Build ID.
  * "master" tag replaces the "latest" image.
  *
+ * DSL: pushDockerImage("short_image_name")
+ *
  * Required Plugins: "Docker Plugins", "JIRA Steps Plugin"
  */
 
