@@ -18,6 +18,7 @@ DOCKER_CRED_ID = 'docker-credentials-id'
 // TODO: Can we introspect this for the SSH Publish Plugin's config?
 DOCKER_COMPOSE_DIR = '/home/ad718x/test-docker-deploy'
 
+/**
 class DockerRegistryConfig {
 
 	def getRegistryURL() {
@@ -36,3 +37,6 @@ class DockerRegistryConfig {
 		return DOCKER_COMPOSE_DIR
 	}
 }
+**/
+
+return this
