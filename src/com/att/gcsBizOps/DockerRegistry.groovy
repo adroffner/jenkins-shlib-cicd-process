@@ -3,8 +3,7 @@
  * This file stores the private Docker registry configuration constants.
  **/
 
-HTTP_PROXY = 'http://one.proxy.att.com:8080'
-HTTPS_PROXY = 'http://one.proxy.att.com:8080'
+package com.att.gcsBizOps;
 
 // Private Docker Registry for Incubate Team
 DOCKER_REGISTRY_URL = 'https://dockercentral.it.att.com:5100'
@@ -19,4 +18,21 @@ DOCKER_CRED_ID = 'docker-credentials-id'
 // TODO: Can we introspect this for the SSH Publish Plugin's config?
 DOCKER_COMPOSE_DIR = '/home/ad718x/test-docker-deploy'
 
-this
+class DockerRegistry {
+
+	def getRegistryURL() {
+		return DOCKER_REGISTRY_URL
+	}
+
+	def getNamespace() {
+		return DOCKER_NAMESPACE
+	}
+
+	def getCredentialsId() {
+		return DOCKER_CRED_ID
+	}
+
+	def getDockerComposeDir() {
+		return DOCKER_COMPOSE_DIR
+	}
+}
