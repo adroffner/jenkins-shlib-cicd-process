@@ -8,7 +8,6 @@
  */
 
 def fullImageName(String imageName) {
-	// def dockerNamespace = incubateConfig.DOCKER_NAMESPACE
 	def dockerNamespace = "${env.DOCKER_NAMESPACE}"
 	def imageNameGitTag = "${dockerNamespace}/${imageName}:${env.BUILD_ID}_${env.GIT_COMMIT}"
 	return imageNameGitTag

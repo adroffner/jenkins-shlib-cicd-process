@@ -1,6 +1,6 @@
-/** Incubate Team Configuration File
+/** Docker Registry Configuration.
  *
- * This file stores configuration variables for this shared library.
+ * This file stores the private Docker registry configuration constants.
  **/
 
 HTTP_PROXY = 'http://one.proxy.att.com:8080'
@@ -16,4 +16,7 @@ DOCKER_CRED_ID = 'docker-credentials-id'
 
 // SSH Publish Plugin Target Directory.
 // docker-compose Directory on remote deployment
+// TODO: Can we introspect this for the SSH Publish Plugin's config?
 DOCKER_COMPOSE_DIR = '/home/ad718x/test-docker-deploy'
+
+this
