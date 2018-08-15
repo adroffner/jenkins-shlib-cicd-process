@@ -33,7 +33,7 @@ def removeBuildImages(String imageName, String hostSSHCredentials) {
 		echo "Remove Docker build images for ${imageName} ..."
 
 		def fullImageName = buildDockerImage.fullImageName(imageName)
-		def baseImageName = fullImageName.split(':')[0]
+		def baseImageName = buildDockerImage.baseImageName(imageName)
 
 		// Leave current build image to speed-up next re-build layers.
 		// Decreasing Builds: priorBuild down to lowestBuild

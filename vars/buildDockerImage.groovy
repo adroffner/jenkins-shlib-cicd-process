@@ -13,6 +13,15 @@ def fullImageName(String imageName) {
 	return imageNameGitTag
 }
 
+def baseImageName(String imageName) {
+	def fullName = fullImageName(imageName)
+
+	// Remove Docker tag and colon.
+	int colonIndex = fullName.lastIndexOf(':')
+	String baseImageGit = fullName.substring(0, colonIndex)
+	return baseImageGit
+}
+
 def call(String imageName, String dockerfileDir = './') {
 	def fullName = fullImageName(imageName)
 
