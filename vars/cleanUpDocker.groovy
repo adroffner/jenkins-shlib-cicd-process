@@ -8,27 +8,53 @@
  * Required Plugins: "Docker Plugins", "Git Plugin", "SSH Agent Plugin"
  */
 
-def call(String imageName, hostSSHCredentials) {
+def removeGarbage(String hostSSHCredentials) {
+	/** Remove garbage containers and images.
+	 *
+	 */
+
+	echo "Remove Docker garbage for ${hostSSHCredentials} ..."
+	sshagent(credentials: [hostSSHCredentials]) {
+		// Remove garbage containers.
+		sh 'docker rm $(docker ps -q -f status=created) || true'
+		sh 'docker rm $(docker ps -q -f  status=exited) || true'
+		sh 'docker rm $(docker ps -a -q -f status=dead) || true'
+
+		// Remove dangling images.
+		sh 'docker rmi $(docker images -q -f dangling=true) || true'
+	}
+}
+
+def removeBuildImages(String imageName, String hostSSHCredentials) {
+	/** Remove current "scratch" build images.
+	 *
+	 */
+
+	echo "Remove Docker build images for ${imageName} ..."
 	def fullImageName = buildDockerImage.fullImageName(imageName)
+	def baseImageName = fullImageName.split(':')[0]
 
-	// SSH login and remove Docker objects.
-	// TODO: Should we run this this on every branch build, or is it too costly?
-	switch (env.BRANCH_NAME) {
-		case 'develop':
-		case 'master':
+	// Leave current build image to speed-up next re-build layers.
+	// Range (decreasing): priorBuild..lowestBuild
+	int priorBuild = env.BUILD_ID.toInteger()
+	int lowestBuild = priorBuild - 10
+	if (lowestBuild < 1) { lowestBuild = 1 }
 
-		case env.BRANCH_NAME:
-			echo "Clean up Docker for ${fullImageName} ..."
-			sshagent(credentials: [hostSSHCredentials]) {
-				// Remove garbage containers.
-				sh 'docker rm $(docker ps -q -f status=created) || true'
-				sh 'docker rm $(docker ps -q -f  status=exited) || true'
-				sh 'docker rm $(docker ps -a -q -f status=dead) || true'
+	sshagent(credentials: [hostSSHCredentials]) {
+		// Remove the temporary build images.
+		sh "docker rmi ${fullImageName} || true"
 
-				// Remove dangling images and this temporary build image.
-				sh 'docker rmi $(docker images -q -f dangling=true) || true'
-				sh "docker rmi ${fullImageName} || true"
-			}
-			break
-	} // end switch
+		// Delete prior "develop" BUILD_ID span, except the current build.
+		for (int buildId in priorBuild..lowestBuild) {
+			sh "docker rmi ${baseImageName}:${buildId} || true"
+		}
+	}
+}
+
+def call(String imageName, String hostSSHCredentials, Boolean gcDocker = false) {
+	removeBuildImages(imageName, hostSSHCredentials)
+
+	if (gcDocker) {
+		removeGarbage(hostSSHCredentials)
+	}
 }
