@@ -10,7 +10,6 @@
 
 def removeGarbage(String hostSSHCredentials) {
 	/** Remove garbage containers and images.
-	 *
 	 */
 
 	echo "Remove Docker garbage for ${hostSSHCredentials} ..."
@@ -27,27 +26,33 @@ def removeGarbage(String hostSSHCredentials) {
 
 def removeBuildImages(String imageName, String hostSSHCredentials) {
 	/** Remove current "scratch" build images.
-	 *
 	 */
 
-	echo "Remove Docker build images for ${imageName} ..."
-	def fullImageName = buildDockerImage.fullImageName(imageName)
-	def baseImageName = fullImageName.split(':')[0]
+	// Is this a Git build in progress?
+	if (env.GIT_COMMIT != null) {
+		echo "Remove Docker build images for ${imageName} ..."
 
-	// Leave current build image to speed-up next re-build layers.
-	// Range (decreasing): priorBuild..lowestBuild (java.io.NotSerializableException)
-	int priorBuild = env.BUILD_ID.toInteger()
-	int lowestBuild = priorBuild - 10
-	if (lowestBuild < 1) { lowestBuild = 1 }
+		def fullImageName = buildDockerImage.fullImageName(imageName)
+		def baseImageName = fullImageName.split(':')[0]
 
-	sshagent(credentials: [hostSSHCredentials]) {
-		// Remove the temporary build images.
-		sh "docker rmi ${fullImageName} || true"
+		// Leave current build image to speed-up next re-build layers.
+		// Decreasing Builds: priorBuild down to lowestBuild
+		int priorBuild = env.BUILD_ID.toInteger()
+		int lowestBuild = priorBuild - 10
+		if (lowestBuild < 1) { lowestBuild = 1 }
 
-		// Delete prior "develop" BUILD_ID span, except the current build.
-		for (int buildId = priorBuild; buildId >= lowestBuild; buildId--) {
-			sh "docker rmi ${baseImageName}:${buildId} || true"
+		sshagent(credentials: [hostSSHCredentials]) {
+			// Remove the temporary build images.
+			sh "docker rmi ${fullImageName} || true"
+
+			// Delete prior "develop" BUILD_ID span, except the current build.
+			for (int buildId = priorBuild; buildId >= lowestBuild; buildId--) {
+				sh "docker rmi ${baseImageName}:${buildId} || true"
+			}
 		}
+	}
+	else {
+		echo "SKIP Remove Docker build images ... This is not Git build."
 	}
 }
 
