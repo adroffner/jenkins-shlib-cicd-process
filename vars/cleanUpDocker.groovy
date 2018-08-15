@@ -35,7 +35,7 @@ def removeBuildImages(String imageName, String hostSSHCredentials) {
 	def baseImageName = fullImageName.split(':')[0]
 
 	// Leave current build image to speed-up next re-build layers.
-	// Range (decreasing): priorBuild..lowestBuild
+	// Range (decreasing): priorBuild..lowestBuild (java.io.NotSerializableException)
 	int priorBuild = env.BUILD_ID.toInteger()
 	int lowestBuild = priorBuild - 10
 	if (lowestBuild < 1) { lowestBuild = 1 }
@@ -45,7 +45,7 @@ def removeBuildImages(String imageName, String hostSSHCredentials) {
 		sh "docker rmi ${fullImageName} || true"
 
 		// Delete prior "develop" BUILD_ID span, except the current build.
-		for (int buildId in priorBuild..lowestBuild) {
+		for (int buildId = priorBuild; buildId >= lowestBuild; buildId--) {
 			sh "docker rmi ${baseImageName}:${buildId} || true"
 		}
 	}
