@@ -32,6 +32,14 @@ def call(String imageName) {
 
 			// Publish unit test, coverage, and static analysis reports.
 			junit healthScaleFactor: 10.0, testResults: '**/unittest.xml'
+
+			// JUnit thresholds do not go to FAILURE, which we want.
+			// See Bug: https://issues.jenkins-ci.org/browse/JENKINS-2734
+			// Work Around: https://support.cloudbees.com/hc/en-us/articles/218866667-How-to-abort-a-Pipeline-build-if-JUnit-tests-fail-
+			if (currentBuild.result == 'UNSTABLE') {
+				currentBuild.result = 'FAILURE'
+				error("Unit Tests are ${currentBuild.result} ... fail the build")
+			}
 				
 			cobertura(
 				autoUpdateHealth: false,
@@ -50,13 +58,6 @@ def call(String imageName) {
 				]],
 				unstableTotalAll: '0',
 				usePreviousBuildAsReference: true)
-
-			// JUnit thresholds do not go to FAILURE, which we want.
-			// See Bug: https://issues.jenkins-ci.org/browse/JENKINS-2734
-			// Work Around: https://support.cloudbees.com/hc/en-us/articles/218866667-How-to-abort-a-Pipeline-build-if-JUnit-tests-fail-
-			if (currentBuild.result != 'SUCCESS') {
-				currentBuild.result = 'FAILURE'
-			}
 		}
 	}
 }
