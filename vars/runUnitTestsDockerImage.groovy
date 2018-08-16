@@ -42,8 +42,8 @@ def call(String imageName) {
 			}
 				
 			cobertura(
-				autoUpdateHealth: false,
-				autoUpdateStability: false,
+				autoUpdateHealth: true,
+				autoUpdateStability: true,
 				coberturaReportFile: '**/coverage.xml',
 				failUnhealthy: true,
 				failUnstable: true,
