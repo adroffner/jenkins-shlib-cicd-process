@@ -42,13 +42,20 @@ def call(String imageName) {
 			}
 				
 			cobertura(
+				coberturaReportFile: '**/coverage.xml',
+				classCoverageTargets:       '80, 0, 0',
+				conditionalCoverageTargets: '80, 0, 0',
+				fileCoverageTargets:        '80, 0, 0',
+				lineCoverageTargets:        '80, 0, 0',
+				methodCoverageTargets:      '80, 0, 0',
+				packageCoverageTargets:     '80, 0, 0',
 				autoUpdateHealth: true,
 				autoUpdateStability: true,
-				coberturaReportFile: '**/coverage.xml',
 				failUnhealthy: true,
 				failUnstable: true,
 				maxNumberOfBuilds: 0,
-				onlyStable: false, sourceEncoding: 'ASCII',
+				onlyStable: false,
+				sourceEncoding: 'ASCII',
 				zoomCoverageChart: false)
 
 			warnings(
