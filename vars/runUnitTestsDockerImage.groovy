@@ -31,7 +31,7 @@ def call(String imageName) {
 """
 
 			// Publish unit test, coverage, and static analysis reports.
-			junit '**/unittest.xml'
+			junit healthScaleFactor: 30.0, testResults: '**/unittest.xml'
 			cobertura(
 				autoUpdateHealth: false,
 				autoUpdateStability: false,
