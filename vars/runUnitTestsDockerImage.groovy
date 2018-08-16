@@ -36,8 +36,9 @@ def call(String imageName) {
 			// JUnit thresholds do not go to FAILURE, which we want.
 			// See Bug: https://issues.jenkins-ci.org/browse/JENKINS-2734
 			// Work Around: https://support.cloudbees.com/hc/en-us/articles/218866667-How-to-abort-a-Pipeline-build-if-JUnit-tests-fail-
+			Boolean badTestResults = false
 			if (currentBuild.result == 'UNSTABLE') {
-				error("Unit Tests are ${currentBuild.result} ... fail the build")
+				badTestResults = true
 			}
 				
 			cobertura(
@@ -57,6 +58,11 @@ def call(String imageName) {
 				]],
 				unstableTotalAll: '0',
 				usePreviousBuildAsReference: true)
+
+			// Report an error when there are bad test results.
+			if (badTestResults) {
+				error("Unit Tests have bad results ... fail the build")
+			}
 		}
 	}
 }
