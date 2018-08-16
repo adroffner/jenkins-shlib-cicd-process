@@ -31,14 +31,7 @@ def call(String imageName) {
 """
 
 			// Publish unit test, coverage, and static analysis reports.
-			// junit healthScaleFactor: 30.0, testResults: '**/unittest.xml'
-
-			xunit(thresholds: [
-				skipped(failureThreshold: '0'),
-				failed(failureThreshold: '0')
-				],
-				tools: [ JUnit(pattern: '**/unittest.xml') ])
-
+			junit healthScaleFactor: 30.0, testResults: '**/unittest.xml'
 			cobertura(
 				autoUpdateHealth: false,
 				autoUpdateStability: false,
