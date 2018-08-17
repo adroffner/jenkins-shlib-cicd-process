@@ -40,15 +40,20 @@ def call(String imageName) {
 			if (currentBuild.result == 'UNSTABLE') {
 				badTestResults = true
 			}
-				
+
+			// Coverage Targets: "healthy, bad, unstable"
+			// healthy:  Report health as 100% when coverage is higher than X%.
+			// bad:      Report health as 0% when coverage is less than Y%.
+			// unstable: Mark the build as unstable when coverage is less than Z%.
+			String coverageTargets = '85, 25, 65'
 			cobertura(
 				coberturaReportFile: '**/coverage.xml',
-				classCoverageTargets:       '80, 0, 0',
-				conditionalCoverageTargets: '80, 0, 0',
-				fileCoverageTargets:        '80, 0, 0',
-				lineCoverageTargets:        '80, 0, 0',
-				methodCoverageTargets:      '80, 0, 0',
-				packageCoverageTargets:     '80, 0, 0',
+				classCoverageTargets:       coverageTargets,
+				conditionalCoverageTargets: coverageTargets,
+				fileCoverageTargets:        coverageTargets,
+				lineCoverageTargets:        coverageTargets,
+				methodCoverageTargets:      coverageTargets,
+				packageCoverageTargets:     coverageTargets,
 				autoUpdateHealth: true,
 				autoUpdateStability: true,
 				failUnhealthy: true,
