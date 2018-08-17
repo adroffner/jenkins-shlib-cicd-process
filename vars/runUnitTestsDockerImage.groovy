@@ -68,7 +68,9 @@ def call(String imageName) {
 					parserName: 'Pep8',
 					pattern: '**/flake8.log'
 				]],
-				unstableTotalAll: '0',
+				canRunOnFailed: true,
+				unstableTotalAll: '0', // unstable when even one warning.
+				failedTotalAll: '15',  // build fails with 15 warnings.
 				usePreviousBuildAsReference: true)
 
 			// Report an error when there are bad test results.
