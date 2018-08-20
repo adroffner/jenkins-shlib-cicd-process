@@ -46,7 +46,7 @@ sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.ym
 				execTimeout: 120000, flatten: true,
 				// makeEmptyDirs: false, noDefaultExcludes: false,
 				// patternSeparator: '[, ]+',
-				remoteDirectory: "${imageName}",  // Relative PROJECT DIR
+				remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
 				// remoteDirectorySDF: false, removePrefix: '',
 				sourceFiles: "docker-compose-${tier}.yml")],
 				// usePromotionTimestamp: false, useWorkspaceInPromotion: false,
