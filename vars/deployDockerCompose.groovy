@@ -25,6 +25,8 @@ def call(String imageName, String remoteDirectory,
 			+ serverTierOptions().join(', ') + ")")
 	}
 
+	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
+
 	// Set the image TAG in docker-compose YAML.
 	if (tier != 'prod') {
 		sh "perl -pi -e 's/:\\\$TAG\$/:${env.BUILD_ID}/;' ${yamlFileDirectory}/docker-compose-${tier}.yml"
@@ -42,7 +44,7 @@ def call(String imageName, String remoteDirectory,
 				sshTransfer(
 				// excludes: '',
 				execCommand: """/bin/bash -c ' \\
-sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${env.DOCKER_REGISTRY_URL} && \\
+sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
 sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull web && \\
 sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
 sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
