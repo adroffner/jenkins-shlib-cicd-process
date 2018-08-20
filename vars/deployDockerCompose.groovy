@@ -16,9 +16,9 @@ def call(String imageName, String remoteDirectory,
 		String tier, String hostSSHCredentials,
 		String dockerCredentials = 'docker-credentials-id',
 		String yamlFileDirectory = '.') {
-	if (not SERVER_TIER_LIST.contains(tier)) {
-		error("DEPLOYMENT FAILED: Server Tier must go to a tier in: "
-			+ SERVER_TIER_LIST.join(', '))
+	if (! SERVER_TIER_LIST.contains(tier)) {
+		error("DEPLOYMENT FAILED: Server Tier must go to a tier in: ("
+			+ SERVER_TIER_LIST.join(', ') + ")")
 	}
 
 	// Set the image TAG in docker-compose YAML.
