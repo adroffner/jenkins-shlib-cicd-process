@@ -10,15 +10,19 @@
  * Required Plugins: "Git Plugin", "Publish Over SSH"
  */
 
-def SERVER_TIER_LIST = ['dev', 'stage', 'prod']
+def serverTierOptions() {
+    return ['dev', 'stage', 'prod']
+}
 
 def call(String imageName, String remoteDirectory,
 		String tier, String hostSSHCredentials,
 		String dockerCredentials = 'docker-credentials-id',
 		String yamlFileDirectory = '.') {
-	if (! SERVER_TIER_LIST.contains(tier)) {
+
+	// Validate tier code.
+	if (! serverTierOptions().contains(tier)) {
 		error("DEPLOYMENT FAILED: Server Tier must go to a tier in: ("
-			+ SERVER_TIER_LIST.join(', ') + ")")
+			+ serverTierOptions().join(', ') + ")")
 	}
 
 	// Set the image TAG in docker-compose YAML.
