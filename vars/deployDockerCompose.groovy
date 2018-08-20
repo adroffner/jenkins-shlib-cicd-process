@@ -10,7 +10,7 @@
  * Required Plugins: "Git Plugin", "Publish Over SSH"
  */
 
-SERVER_TIER_LIST = ['dev', 'stage', 'prod']
+def SERVER_TIER_LIST = ['dev', 'stage', 'prod']
 
 def call(String imageName, String remoteDirectory,
 		String tier, String hostSSHCredentials,
