@@ -1,10 +1,12 @@
 /** JIRA Steps Quality Assurance with Git.
  *
- * This file adds Quality Assurance (QA) steps to the JIRA Steps Plugin DSL.
+ * This adds Quality Assurance (QA) steps to the JIRA Steps Plugin DSL.
  * Some QA reporting, etc., relates the Git working branch to the JIRA ticket.
  *
  * QA automation needs to report the Git branch build to JIRA.
- * The current Git working branch is env.BRANCH_NAME and is implied here.
+ * The current Git working branch is env.BRANCH_NAME and is passed here.
+ *
+ * See "Accessing Steps" https://jenkins.io/doc/book/pipeline/shared-libraries/#accessing-steps
  *
  * Required Plugins: Git Plugin, JIRA Steps Plugin
  **/

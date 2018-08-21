@@ -2,7 +2,9 @@
  *
  * E-mail the build report to interested parties.
  *
- * Required Plugins: Git Plugin, ??
+ * DSL: emailBuildReport(['user@example.com', 'admin@example.com'])
+ *
+ * Required Plugins: "Git Plugin", mail?
  */
 
 def call(mailToList) {
