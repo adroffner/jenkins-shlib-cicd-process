@@ -16,7 +16,7 @@
  * 	"JUnit Plugin", "Cobertura Plugin", "Warnings Plugin"
  */
 
-def call(String imageName, agentUser = 'ad718x') {
+def call(String imageName, agentUser = 'www-data') {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
