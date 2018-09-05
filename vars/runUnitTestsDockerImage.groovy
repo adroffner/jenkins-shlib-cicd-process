@@ -16,7 +16,7 @@
  * 	"JUnit Plugin", "Cobertura Plugin", "Warnings Plugin"
  */
 
-def call(String imageName) {
+def call(String imageName, agentUser = 'ad718x') {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
@@ -25,7 +25,7 @@ def call(String imageName) {
 		script {
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
-&& docker run \\
+&& docker run --user=`/usr/bin/id --user ${agentUser}` \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/" ${fullImageName}
 """
