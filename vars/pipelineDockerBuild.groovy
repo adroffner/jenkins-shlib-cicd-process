@@ -16,7 +16,7 @@
  **/
 
 
-def call(String imageName, emailReprortList = ['ad718x@att.com', 'pb4301@att.com'],
+def call(String imageName, emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
 	nodeLabel = 'microservices') {
 
 	pipeline {
@@ -95,7 +95,7 @@ def call(String imageName, emailReprortList = ['ad718x@att.com', 'pb4301@att.com
 	    }
 	    post {
 		always {
-			emailBuildReport(['ad718x@att.com', 'pb4301@att.com'])
+			emailBuildReport(emailReportList)
 			jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
 		}
 		cleanup {
