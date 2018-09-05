@@ -16,7 +16,11 @@
  * 	"JUnit Plugin", "Cobertura Plugin", "Warnings Plugin"
  */
 
-def call(String imageName, agentUser = 'docker') {
+def call(String imageName,
+	 int healthyCoverageAbove = 85,
+	 int unstableCoverageBelow = 85,
+	 int failureCoverageBelow = 65,
+	 agentUser = 'docker') {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
@@ -45,7 +49,11 @@ def call(String imageName, agentUser = 'docker') {
 			// healthy:  Report health as 100% when coverage is higher than X%.
 			// bad:      Report health as 0% when coverage is less than Y%.
 			// unstable: Mark the build as unstable when coverage is less than Z%.
-			String coverageTargets = '85, 25, 65'
+			String coverageTargets = [
+				healthyCoverageAbove,
+				failureCoverageBelow, // must swap positions
+				unstableCoverageBelow
+			].join(', ')
 			cobertura(
 				coberturaReportFile: '**/coverage.xml',
 				classCoverageTargets:       coverageTargets,
@@ -57,7 +65,7 @@ def call(String imageName, agentUser = 'docker') {
 				autoUpdateHealth: true,
 				autoUpdateStability: true,
 				failUnhealthy: true,
-				failUnstable: true,
+				failUnstable: false,
 				maxNumberOfBuilds: 0,
 				onlyStable: false,
 				sourceEncoding: 'ASCII',
