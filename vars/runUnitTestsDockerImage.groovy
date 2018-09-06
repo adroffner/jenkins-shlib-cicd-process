@@ -20,7 +20,8 @@ def call(String imageName,
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
 	 int failureCoverageBelow = 65,
-	 agentUser = 'jenkins') {
+	 agentUser = 'apache',
+	 agentGroup = 'jenkins') {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
@@ -29,7 +30,8 @@ def call(String imageName,
 		script {
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
-&& docker run --user=`/usr/bin/id --user ${agentUser}` \\
+&& docker run \\
+	--user="`/usr/bin/id --user ${agentUser}`:`/usr/bin/id --group ${agentGroup}`" \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/" ${fullImageName}
 """
