@@ -19,19 +19,17 @@
 def call(String imageName,
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
-	 int failureCoverageBelow = 65,
-	 agentUser = 'jenkins',
-	 agentGroup = 'jenkins') {
+	 int failureCoverageBelow = 65) {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
 	if (unitTestImage != null) {
-		// Start docker container and execute run_tests.sh
+		// Start docker container as SSH agent username and execute run_tests.sh
 		script {
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
 && docker run \\
-	--user="`/usr/bin/id --user ${agentUser}`:`/usr/bin/id --group ${agentGroup}`" \\
+	--user="`/usr/bin/id --user \$(whoami)`" \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/" ${fullImageName}
 """
