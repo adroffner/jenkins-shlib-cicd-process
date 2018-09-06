@@ -20,7 +20,7 @@ def call(String imageName,
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
 	 int failureCoverageBelow = 65,
-	 agentUser = 'ad718x') {
+	 agentUser = 'apache') {
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
