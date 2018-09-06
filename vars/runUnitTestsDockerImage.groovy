@@ -24,12 +24,12 @@ def call(String imageName,
 	def unitTestImage = docker.image(fullImageName)
 
 	if (unitTestImage != null) {
-		// Start docker container as SSH agent username and execute run_tests.sh
+		// Start docker container and execute run_tests.sh
+		// # --user="`/usr/bin/id --user \$(whoami)`" \\
 		script {
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
 && docker run \\
-	--user="`/usr/bin/id --user \$(whoami)`" \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/" ${fullImageName}
 """
