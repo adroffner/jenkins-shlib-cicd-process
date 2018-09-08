@@ -24,6 +24,7 @@ Build Number: ${env.BUILD_ID}
 
 This is an automated e-mail. Please, do not reply to sender.
 """
+	}
 	catch(ConnectException exception) {
 	    echo("E-mail Report Lost: ${exception}")
 	}
