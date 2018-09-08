@@ -9,9 +9,10 @@
 
 def call(mailToList) {
     node {
-        mail to: mailToList.join(','),
-        subject: "[CI Process][${currentBuild.currentResult}][Build ${env.BUILD_ID}][${env.JOB_NAME}] Jenkins Done",
-        body: """
+	try {
+	    mail to: mailToList.join(','),
+	    subject: "[CI Process][${currentBuild.currentResult}][Build ${env.BUILD_ID}][${env.JOB_NAME}] Jenkins Done",
+	    body: """
 
 The CI Processing pipeline finished building JOB ${env.BUILD_ID} with ${currentBuild.currentResult} status.
 
@@ -23,5 +24,8 @@ Build Number: ${env.BUILD_ID}
 
 This is an automated e-mail. Please, do not reply to sender.
 """
+	catch(ConnectException exception) {
+	    echo("E-mail Report Lost: ${exception}")
+	}
     }
 }
