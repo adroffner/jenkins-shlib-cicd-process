@@ -23,6 +23,7 @@ def call(mergeFrom, gitCredentials = 'git-credentials-id') {
 			sh "git checkout ${mergeFrom}"
 			sh "git pull"
 			sh "git checkout ${env.BRANCH_NAME}"
+			sh "git pull"
 			sh "git merge ${mergeFrom}"
 		}
         }
