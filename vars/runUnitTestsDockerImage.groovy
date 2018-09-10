@@ -26,7 +26,10 @@ def call(String imageName,
 	// Skip Testing when 0% health is OK.
 	bool skipTests = (healthyCoverageAbove <= 0)
 
-	if (unitTestImage != null and (! skipTests)) {
+	if (skipTests || unitTestImage == null) {
+		echo "Skip Unit Tests: healthy at ${healthyCoverageAbove}% or no image=${unitTestImage}"
+	}
+	else {
 		// Start docker container and execute run_tests.sh
 		// # --user="`/usr/bin/id --user \$(whoami)`" \\
 		script {
