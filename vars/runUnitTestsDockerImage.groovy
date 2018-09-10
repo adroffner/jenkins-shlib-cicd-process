@@ -24,7 +24,7 @@ def call(String imageName,
 	def unitTestImage = docker.image(fullImageName)
 
 	// Skip Testing when 0% health is OK.
-	bool skipTests = (healthyCoverageAbove <= 0)
+	boolean skipTests = (healthyCoverageAbove <= 0)
 
 	if (skipTests || unitTestImage == null) {
 		echo "Skip Unit Tests: healthy at ${healthyCoverageAbove}% or no image=${unitTestImage}"
