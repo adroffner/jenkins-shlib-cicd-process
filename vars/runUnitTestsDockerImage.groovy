@@ -23,7 +23,10 @@ def call(String imageName,
 	def fullImageName = buildDockerImage.fullImageName(imageName)
 	def unitTestImage = docker.image(fullImageName)
 
-	if (unitTestImage != null) {
+	// Skip Testing when 0% health is OK.
+	bool skipTests = (healthyCoverageAbove <= 0)
+
+	if (unitTestImage != null and (! skipTests)) {
 		// Start docker container and execute run_tests.sh
 		// # --user="`/usr/bin/id --user \$(whoami)`" \\
 		script {
