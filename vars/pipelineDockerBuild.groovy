@@ -18,10 +18,10 @@
 
 def call(String imageName,
 	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
+	 nodeLabel = 'microservices',
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
-	 int failureCoverageBelow = 65,
-	 nodeLabel = 'microservices') {
+	 int failureCoverageBelow = 65) {
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
