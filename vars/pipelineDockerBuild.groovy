@@ -16,8 +16,12 @@
  **/
 
 
-def call(String imageName, emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
-	nodeLabel = 'microservices') {
+def call(String imageName,
+	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
+	 int healthyCoverageAbove = 85,
+	 int unstableCoverageBelow = 85,
+	 int failureCoverageBelow = 65,
+	 nodeLabel = 'microservices') {
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
@@ -50,7 +54,10 @@ def call(String imageName, emailReportList = ['ad718x@att.com', 'pb4301@att.com'
 		stage('Run Unit Tests') { 
 		    when { not { branch 'master' } }
 		    steps {
-			runUnitTestsDockerImage "${imageName}"
+			runUnitTestsDockerImage("${imageName}",
+						healthyCoverageAbove,
+						unstableCoverageBelow,
+						failureCoverageBelow)
 		    }
 		    post {
 			fixed {
