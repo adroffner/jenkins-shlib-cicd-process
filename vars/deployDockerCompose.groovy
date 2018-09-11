@@ -14,8 +14,19 @@ def serverTierOptions() {
     return ['dev', 'stage', 'prod']
 }
 
+def getExternalSharedNetwork(String tier, String yamlFileDirectory = '.') {
+	// Returns the Docker network name or null when the YAML has none.
+	try {
+		def composeYaml = readYaml(file: "${yamlFileDirectory}/docker-compose-${tier}.yml")
+		return composeYaml.networks.default.external.name
+	} catch(Exception e) {
+		error("YAML File \"docker-compose-${tier}.yml\" is unreadable")
+	}
+}
+
 def call(String imageName, String remoteDirectory,
 		String tier, String hostSSHCredentials,
+		String serviceName = 'web',
 		String dockerCredentials = 'docker-credentials-id',
 		String yamlFileDirectory = '.') {
 
@@ -26,6 +37,13 @@ def call(String imageName, String remoteDirectory,
 	}
 
 	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
+
+	def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
+	def addNetworkShell = 'true'
+	if (sharedNetwork != null) {
+		echo("Deployment requires shared network \"${sharedNetwork}\" ...")
+		addNetworkShell = "docker network inspect ${sharedNetwork} || docker network create -d bridge ${sharedNetwork}"
+	}
 
 	// Set the image TAG in docker-compose YAML.
 	if (tier != 'prod') {
@@ -45,7 +63,8 @@ def call(String imageName, String remoteDirectory,
 				// excludes: '',
 				execCommand: """/bin/bash -c ' \\
 sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
-sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull web && \\
+${addNetworkShell} && \\
+sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
 sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
 sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
 """,
