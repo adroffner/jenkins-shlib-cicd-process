@@ -81,19 +81,16 @@ def call(String imageName,
 				switch ("${env.BRANCH_NAME}") {
 				case 'develop': // QA Deployment
 					tier = 'dev'
-					deploySshCredentials = 'micro.dev'
 					break
 
 				case 'master': // Production "latest" deployment
 					tier = 'prod'
-					deploySshCredentials = 'micro.prod'
 					break
 
 				default:
 					if (env.BRANCH_NAME.startsWith('release/')) {
 						// UAT "release/*" Deployment
                         			tier = 'stage'
-						deploySshCredentials = 'micro.stage'
                     			}
 					else {
 						error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
@@ -101,8 +98,7 @@ def call(String imageName,
 				}
 
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
-				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}",
-					tier, deploySshCredentials)
+				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier)
 			}
 		    }
 		}
@@ -113,9 +109,26 @@ def call(String imageName,
 			jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
 		}
 		cleanup {
-		    deleteDir() // clean up our workspace
-		    // TODO: Set SSH Credentials to distinguish "dev" from "prod". 
-		    cleanUpDocker("${imageName}", 'micro.dev')
+		    script {
+			deleteDir() // clean up our workspace
+
+			switch ("${env.BRANCH_NAME}") {
+			case 'develop': // QA Deployment
+				tier = 'dev'
+				break
+
+			case 'master': // Production "latest" deployment
+				tier = 'prod'
+				break
+
+			default:
+				if (env.BRANCH_NAME.startsWith('release/')) {
+					// UAT "release/*" Deployment
+					tier = 'stage'
+				}
+                    	}
+			cleanUpDocker("${imageName}", tier)
+		    }
 		}
 	    }
 	}
