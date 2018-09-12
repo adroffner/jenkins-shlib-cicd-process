@@ -42,7 +42,7 @@ def removeBuildImages(String imageName, String tier) {
 		if (lowestBuild < 1) { lowestBuild = 1 }
 
 		for (hostSSHTarget in deployDockerCompose.publishCredentialsList(tier, '')) {
-			sshagent(credentials: [hostSSHCredentials]) {
+			sshagent(credentials: [hostSSHTarget]) {
 				// Remove the temporary build images.
 				sh "docker rmi ${fullImageName} || true"
 
