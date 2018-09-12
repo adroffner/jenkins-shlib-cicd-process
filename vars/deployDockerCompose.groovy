@@ -10,8 +10,26 @@
  * Required Plugins: "Git Plugin", "Publish Over SSH"
  */
 
+def serverTierHosts() {
+    // Map tier to list of "Publish Over SSH" host credentials in Jenkins.
+    return [
+        dev:   ['micro.dev'],
+        stage: ['micro.stage'],
+        prod:  [
+            // production load-balance cluster
+	    'micro.prod', 'micro.prod.04',
+            // disaster recovery servers
+            'micro.dr',
+        ]
+    ]
+}
+
 def serverTierOptions() {
-    return ['dev', 'stage', 'prod']
+    return serverTierHosts().keySet()
+}
+
+def publishCredentialsList(String tier, String hostSSHCredentials) {
+    return serverTierHosts().get(tier, [hostSSHCredentials])
 }
 
 def getExternalSharedNetwork(String tier, String yamlFileDirectory = '.') {
@@ -26,7 +44,7 @@ def getExternalSharedNetwork(String tier, String yamlFileDirectory = '.') {
 }
 
 def call(String imageName, String remoteDirectory,
-		String tier, String hostSSHCredentials,
+		String tier, String hostSSHCredentials = '',
 		String serviceName = 'web',
 		String dockerCredentials = 'docker-credentials-id',
 		String yamlFileDirectory = '.') {
@@ -52,31 +70,33 @@ def call(String imageName, String remoteDirectory,
 	}
 
 	// Move the docker-compose YAML file over, download and run it.
-	withCredentials([[$class: 'UsernamePasswordMultiBinding',
-		credentialsId: dockerCredentials,
-		usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
+	for (hostSSHtarget in publishCredentialsList(tier, hostSSHCredentials)) {
+		withCredentials([[$class: 'UsernamePasswordMultiBinding',
+			credentialsId: dockerCredentials,
+			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
 
-		// Use Publish Over SSH: https://jenkins.io/doc/pipeline/steps/publish-over-ssh/
-		sshPublisher(publishers: [
-			sshPublisherDesc(configName: hostSSHCredentials, // SSH Credentials
-			transfers: [
-				sshTransfer(
-				// excludes: '',
-				execCommand: """/bin/bash -c ' \\
-sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
-${addNetworkShell} && \\
-sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
-sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
-sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
-""",
-				execTimeout: 120000, flatten: true,
-				// makeEmptyDirs: false, noDefaultExcludes: false,
-				// patternSeparator: '[, ]+',
-				remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
-				// remoteDirectorySDF: false, removePrefix: '',
-				sourceFiles: "docker-compose-${tier}.yml")],
-				// usePromotionTimestamp: false, useWorkspaceInPromotion: false,
-				verbose: true)],
-				failOnError: true)
-	} // end withCredentials
+			// Use Publish Over SSH: https://jenkins.io/doc/pipeline/steps/publish-over-ssh/
+			sshPublisher(publishers: [
+				sshPublisherDesc(configName: hostSSHtarget, // SSH Credentials
+				transfers: [
+					sshTransfer(
+					// excludes: '',
+					execCommand: """/bin/bash -c ' \\
+	sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
+	${addNetworkShell} && \\
+	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
+	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
+	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
+	""",
+					execTimeout: 120000, flatten: true,
+					// makeEmptyDirs: false, noDefaultExcludes: false,
+					// patternSeparator: '[, ]+',
+					remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
+					// remoteDirectorySDF: false, removePrefix: '',
+					sourceFiles: "docker-compose-${tier}.yml")],
+					// usePromotionTimestamp: false, useWorkspaceInPromotion: false,
+					verbose: true)],
+					failOnError: true)
+		} // end withCredentials
+	}
 }

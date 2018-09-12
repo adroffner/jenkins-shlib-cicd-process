@@ -24,7 +24,7 @@ def removeGarbage(String hostSSHCredentials) {
 	}
 }
 
-def removeBuildImages(String imageName, String hostSSHCredentials) {
+def removeBuildImages(String imageName, String tier) {
 	/** Remove current "scratch" build images.
 	 */
 
@@ -41,18 +41,21 @@ def removeBuildImages(String imageName, String hostSSHCredentials) {
 		int lowestBuild = priorBuild - 10
 		if (lowestBuild < 1) { lowestBuild = 1 }
 
-		sshagent(credentials: [hostSSHCredentials]) {
-			// Remove the temporary build images.
-			sh "docker rmi ${fullImageName} || true"
+		for (hostSSHTarget in deployDockerCompose.publishCredentialsList(tier, '')) {
+			sshagent(credentials: [hostSSHCredentials]) {
+				// Remove the temporary build images.
+				sh "docker rmi ${fullImageName} || true"
 
-			// Delete prior "develop" BUILD_ID span, except the current build.
-			for (int buildId = priorBuild; buildId >= lowestBuild; buildId--) {
-				sh "docker rmi ${baseImageName}:${buildId} || true"
+				// Delete prior "develop" BUILD_ID span, except the current build.
+				for (int buildId = priorBuild - 1; buildId >= lowestBuild; buildId--) {
+					sh "docker rmi ${baseImageName}:${tier}_${buildId} || true"
+				}
 			}
 		}
+		
 	}
 	else {
-		echo "SKIP Remove Docker build images ... This is not Git build."
+		echo "SKIP Remove Docker build images ... This is not a Git build."
 	}
 }
 
