@@ -109,8 +109,26 @@ def call(String imageName,
 			jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
 		}
 		cleanup {
-		    deleteDir() // clean up our workspace
-		    cleanUpDocker("${imageName}", 'dev')
+		    script {
+			deleteDir() // clean up our workspace
+
+			switch ("${env.BRANCH_NAME}") {
+			case 'develop': // QA Deployment
+				tier = 'dev'
+				break
+
+			case 'master': // Production "latest" deployment
+				tier = 'prod'
+				break
+
+			default:
+				if (env.BRANCH_NAME.startsWith('release/')) {
+					// UAT "release/*" Deployment
+					tier = 'stage'
+				}
+                    	}
+			cleanUpDocker("${imageName}", tier)
+		    }
 		}
 	    }
 	}
