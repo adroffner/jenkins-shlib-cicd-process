@@ -19,7 +19,7 @@ def call(String imageName) {
 		switch ("${env.BRANCH_NAME}") {
 		case 'develop': // QA Deployment
 			echo "Pushing QA Docker image for ${fullImageName} ..."
-			pushImage.push("dev-${env.BUILD_ID}")
+			pushImage.push("dev_${env.BUILD_ID}")
 			break
 
 		case 'master': // Production "latest" deployment
@@ -32,7 +32,7 @@ def call(String imageName) {
 			if (env.BRANCH_NAME.startsWith('release/')) {
 				// UAT "release/*" Deployment
 				echo "Pushing UAT Docker image for ${fullImageName} ..."
-				pushImage.push("stage-${env.BUILD_ID}")
+				pushImage.push("stage_${env.BUILD_ID}")
 			}
 		}
 	}
