@@ -48,7 +48,7 @@ def call(String imageName, String remoteDirectory,
 
 	// Set the image TAG in docker-compose YAML.
 	if (tier != 'prod') {
-		sh "perl -pi -e 's/:\\\$TAG\$/:${env.BUILD_ID}/;' ${yamlFileDirectory}/docker-compose-${tier}.yml"
+		sh "perl -pi -e 's/:\\\$TAG\$/:${tier}_${env.BUILD_ID}/;' ${yamlFileDirectory}/docker-compose-${tier}.yml"
 	}
 
 	// Move the docker-compose YAML file over, download and run it.
