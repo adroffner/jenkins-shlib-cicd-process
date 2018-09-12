@@ -88,7 +88,7 @@ def call(String imageName, String remoteDirectory,
 	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
 	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
 	""",
-					execTimeout: 120000, flatten: true,
+					execTimeout: 720000, flatten: true,
 					// makeEmptyDirs: false, noDefaultExcludes: false,
 					// patternSeparator: '[, ]+',
 					remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
