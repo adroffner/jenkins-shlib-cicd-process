@@ -16,15 +16,24 @@ def call(String imageName) {
 	def pushImage = docker.image(fullImageName)
 
 	if (pushImage != null) {
-		if (env.BRANCH_NAME == 'develop') {
+		switch ("${env.BRANCH_NAME}") {
+		case 'develop': // QA Deployment
 			echo "Pushing QA Docker image for ${fullImageName} ..."
-			pushImage.push("${env.BUILD_ID}")
-		}
+			pushImage.push("dev_${env.BUILD_ID}")
+			break
 
-		if (env.BRANCH_NAME == 'master') {
+		case 'master': // Production "latest" deployment
 			echo "Pushing latest Docker image for ${fullImageName} ..."
 			pushImage.push('latest')
 			jiraBuildReport "Pushed \"latest\" image \"${fullImageName}\" for master"
+			break
+
+		default:
+			if (env.BRANCH_NAME.startsWith('release/')) {
+				// UAT "release/*" Deployment
+				echo "Pushing UAT Docker image for ${fullImageName} ..."
+				pushImage.push("stage_${env.BUILD_ID}")
+			}
 		}
 	}
 }

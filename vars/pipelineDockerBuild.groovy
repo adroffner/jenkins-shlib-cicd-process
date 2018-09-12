@@ -79,18 +79,25 @@ def call(String imageName,
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
-				case 'develop':
+				case 'develop': // QA Deployment
 					tier = 'dev'
 					deploySshCredentials = 'micro.dev'
 					break
 
-				case 'master':
+				case 'master': // Production "latest" deployment
 					tier = 'prod'
 					deploySshCredentials = 'micro.prod'
 					break
 
 				default:
-					error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
+					if (env.BRANCH_NAME.startsWith('release/')) {
+						// UAT "release/*" Deployment
+                        			tier = 'stage'
+						deploySshCredentials = 'micro.stage'
+                    			}
+					else {
+						error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
+                    			}
 				}
 
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
