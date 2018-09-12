@@ -43,7 +43,7 @@ def call(String imageName, String remoteDirectory,
 	def addNetworkShell = 'true'
 	if (sharedNetwork != null) {
 		echo("Deployment requires shared network \"${sharedNetwork}\" ...")
-		addNetworkShell = "docker network inspect ${sharedNetwork} || docker network create -d bridge ${sharedNetwork}"
+		addNetworkShell = "sudo docker network inspect ${sharedNetwork} || sudo docker network create -d bridge ${sharedNetwork}"
 	}
 
 	// Set the image TAG in docker-compose YAML.
