@@ -27,7 +27,7 @@ sudo docker rmi \$(sudo docker images -q -f dangling=true) || true
 	    execTimeout: 720000)], verbose: true)])
 }
 
-def removeBuildImages(String imageName, String hostSSHCredentials) {
+def removeBuildImages(String imageName, String tier, String hostSSHCredentials) {
 	/** Remove current "scratch" build images.
 	 */
 
@@ -64,7 +64,7 @@ sudo docker rmi ${baseImageName}:${tier}_${buildId} || true
 
 def call(String imageName, String tier, Boolean gcDocker = true) {
 	for (hostSSHCredentials in deployDockerCompose.publishCredentialsList(tier, '')) {
-		removeBuildImages(imageName, hostSSHCredentials)
+		removeBuildImages(imageName, tier, hostSSHCredentials)
 
 		if (gcDocker) {
 			removeGarbage(hostSSHCredentials)
