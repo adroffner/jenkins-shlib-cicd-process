@@ -69,7 +69,7 @@ def call(String imageName,
 		    }
 		}
 		stage('Push Docker Image') { 
-		    when { anyOf { branch 'develop'; branch 'master' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
