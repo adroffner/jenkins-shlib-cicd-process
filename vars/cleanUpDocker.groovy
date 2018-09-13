@@ -18,12 +18,12 @@ def removeGarbage(String hostSSHCredentials) {
 	    sshPublisherDesc(configName: hostSSHCredentials,
 	    transfers: [sshTransfer(
 	    // Remove garbage containers and dangling images.
-	    execCommand: """
+	    execCommand: '''
 docker rm $(docker ps -q -f status=created) || true && \\
 docker rm $(docker ps -q -f  status=exited) || true && \\
 docker rm $(docker ps -a -q -f status=dead) || true && \\
 docker rmi $(docker images -q -f dangling=true) || true
-""",
+''',
 	    execTimeout: 720000)], verbose: true)])
 }
 
@@ -53,9 +53,9 @@ def removeBuildImages(String imageName, String tier) {
 				    sshPublisherDesc(configName: hostSSHCredentials,
 				    transfers: [sshTransfer(
 				    execCommand: """
-	docker rmi ${fullImageName} || true && \\
-	docker rmi ${baseImageName}:${tier}_${buildId} || true
-	""",
+docker rmi ${fullImageName} || true && \\
+docker rmi ${baseImageName}:${tier}_${buildId} || true
+""",
 				    execTimeout: 720000)], verbose: true)])
 			}
 		}
