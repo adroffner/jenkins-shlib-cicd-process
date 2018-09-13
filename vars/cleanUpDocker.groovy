@@ -18,12 +18,12 @@ def removeGarbage(String hostSSHCredentials) {
 	    sshPublisherDesc(configName: hostSSHCredentials,
 	    transfers: [sshTransfer(
 	    // Remove garbage containers and dangling images.
-	    execCommand: '''
-docker rm $(docker ps -q -f status=created) || true && \\
-docker rm $(docker ps -q -f  status=exited) || true && \\
-docker rm $(docker ps -a -q -f status=dead) || true && \\
-docker rmi $(docker images -q -f dangling=true) || true
-''',
+	    execCommand: """
+docker rm \$(docker ps -q -f status=created) || true && \\
+docker rm \$(docker ps -q -f  status=exited) || true && \\
+docker rm \$(docker ps -a -q -f status=dead) || true && \\
+docker rmi \$(docker images -q -f dangling=true) || true
+""",
 	    execTimeout: 720000)], verbose: true)])
 }
 
