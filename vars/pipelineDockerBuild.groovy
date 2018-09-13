@@ -75,7 +75,7 @@ def call(String imageName,
 		    }
 		}
 		stage('Deploy Service') { 
-		    when { anyOf { branch 'develop'; branch 'master' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
@@ -112,21 +112,18 @@ def call(String imageName,
 		    script {
 			deleteDir() // clean up our workspace
 
-			switch ("${env.BRANCH_NAME}") {
-			case 'develop': // QA Deployment
-				tier = 'dev'
-				break
+			def tier = 'dev' // QA Deployment
 
-			case 'master': // Production "latest" deployment
+			if ("${env.BRANCH_NAME}" == 'master') {
+				// Production "latest" deployment
 				tier = 'prod'
-				break
+			}
 
-			default:
-				if (env.BRANCH_NAME.startsWith('release/')) {
-					// UAT "release/*" Deployment
-					tier = 'stage'
-				}
-                    	}
+			if (env.BRANCH_NAME.startsWith('release/')) {
+				// UAT "release/*" Deployment
+				tier = 'stage'
+			}
+
 			cleanUpDocker("${imageName}", tier)
 		    }
 		}
