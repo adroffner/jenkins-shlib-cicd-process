@@ -16,15 +16,14 @@ package com.att.gcsBizOps;
 def getTicketIdFromBranch(String branch) {
 	// Get JIRA Ticket-ID from Git Branch.
 	// branch := 'feature/TIC-000-working-branch-topic'
-	parts = branch.split('/')
-	if (parts.length > 1) { 
-		parts = parts[1].split('-')
-		ticketId = parts[0..1].join('-')
-	}
-	else {
-		// TODO: neither "develop" nor "master" match the parser; are they needed?
-		ticketId = null
-	}
+	def ticketId = null
+	try {
+		parts = branch.split('/')
+		if (parts.length > 1) { 
+			parts = parts[1].split('-')
+			ticketId = parts[0..1].join('-')
+		}
+	} catch (Exception e) {}
 
 	return ticketId
 }
