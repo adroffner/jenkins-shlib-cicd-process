@@ -69,33 +69,36 @@ def call(String imageName,
 		    }
 		}
 		stage('Push Docker Image') { 
-		    when { anyOf { branch 'develop'; branch 'master' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
 		}
 		stage('Deploy Service') { 
-		    when { anyOf { branch 'develop'; branch 'master' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
-				case 'develop':
+				case 'develop': // QA Deployment
 					tier = 'dev'
-					deploySshCredentials = 'micro.dev'
 					break
 
-				case 'master':
+				case 'master': // Production "latest" deployment
 					tier = 'prod'
-					deploySshCredentials = 'micro.prod'
 					break
 
 				default:
-					error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
+					if (env.BRANCH_NAME.startsWith('release/')) {
+						// UAT "release/*" Deployment
+                        			tier = 'stage'
+                    			}
+					else {
+						error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
+                    			}
 				}
 
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
-				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}",
-					tier, deploySshCredentials)
+				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier)
 			}
 		    }
 		}
@@ -106,9 +109,23 @@ def call(String imageName,
 			jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
 		}
 		cleanup {
-		    deleteDir() // clean up our workspace
-		    // TODO: Set SSH Credentials to distinguish "dev" from "prod". 
-		    cleanUpDocker("${imageName}", 'micro.dev')
+		    script {
+			deleteDir() // clean up our workspace
+
+			def tier = 'dev' // QA Deployment
+
+			if ("${env.BRANCH_NAME}" == 'master') {
+				// Production "latest" deployment
+				tier = 'prod'
+			}
+
+			if (env.BRANCH_NAME.startsWith('release/')) {
+				// UAT "release/*" Deployment
+				tier = 'stage'
+			}
+
+			cleanUpDocker("${imageName}", tier)
+		    }
 		}
 	    }
 	}

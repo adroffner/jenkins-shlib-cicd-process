@@ -13,18 +13,21 @@ def removeGarbage(String hostSSHCredentials) {
 	 */
 
 	echo "Remove Docker garbage for ${hostSSHCredentials} ..."
-	sshagent(credentials: [hostSSHCredentials]) {
-		// Remove garbage containers.
-		sh 'docker rm $(docker ps -q -f status=created) || true'
-		sh 'docker rm $(docker ps -q -f  status=exited) || true'
-		sh 'docker rm $(docker ps -a -q -f status=dead) || true'
 
-		// Remove dangling images.
-		sh 'docker rmi $(docker images -q -f dangling=true) || true'
-	}
+	sshPublisher(publishers: [
+	    sshPublisherDesc(configName: hostSSHCredentials,
+	    transfers: [sshTransfer(
+	    // Remove garbage containers and dangling images.
+	    execCommand: '''
+sudo docker rm \$(sudo docker ps -q -f status=created) || true && \\
+sudo docker rm \$(sudo docker ps -q -f  status=exited) || true && \\
+sudo docker rm \$(sudo docker ps -a -q -f status=dead) || true && \\
+sudo docker rmi \$(sudo docker images -q -f dangling=true) || true
+''',
+	    execTimeout: 720000)], verbose: true)])
 }
 
-def removeBuildImages(String imageName, String hostSSHCredentials) {
+def removeBuildImages(String imageName, String tier, String hostSSHCredentials) {
 	/** Remove current "scratch" build images.
 	 */
 
@@ -41,25 +44,30 @@ def removeBuildImages(String imageName, String hostSSHCredentials) {
 		int lowestBuild = priorBuild - 10
 		if (lowestBuild < 1) { lowestBuild = 1 }
 
-		sshagent(credentials: [hostSSHCredentials]) {
-			// Remove the temporary build images.
-			sh "docker rmi ${fullImageName} || true"
-
-			// Delete prior "develop" BUILD_ID span, except the current build.
-			for (int buildId = priorBuild; buildId >= lowestBuild; buildId--) {
-				sh "docker rmi ${baseImageName}:${buildId} || true"
-			}
+		// Remove the temporary build image.
+		// Delete each prior "develop" BUILD_ID, except the current build.
+		for (int buildId = priorBuild - 1; buildId >= lowestBuild; buildId--) {
+			sshPublisher(publishers: [
+			    sshPublisherDesc(configName: hostSSHCredentials,
+			    transfers: [sshTransfer(
+			    execCommand: """
+sudo docker rmi ${fullImageName} || true && \\
+sudo docker rmi ${baseImageName}:${tier}_${buildId} || true
+""",
+			    execTimeout: 720000)], verbose: true)])
 		}
 	}
 	else {
-		echo "SKIP Remove Docker build images ... This is not Git build."
+		echo "SKIP Remove Docker build images ... This is not a Git build."
 	}
 }
 
-def call(String imageName, String hostSSHCredentials, Boolean gcDocker = false) {
-	removeBuildImages(imageName, hostSSHCredentials)
+def call(String imageName, String tier, Boolean gcDocker = true) {
+	for (hostSSHCredentials in deployDockerCompose.publishCredentialsList(tier, '')) {
+		removeBuildImages(imageName, tier, hostSSHCredentials)
 
-	if (gcDocker) {
-		removeGarbage(hostSSHCredentials)
+		if (gcDocker) {
+			removeGarbage(hostSSHCredentials)
+		}
 	}
 }
