@@ -27,7 +27,7 @@ sudo docker rmi \$(sudo docker images -q -f dangling=true) || true
 	    execTimeout: 720000)], verbose: true)])
 }
 
-def removeBuildImages(String imageName, String tier) {
+def removeBuildImages(String imageName, String hostSSHCredentials) {
 	/** Remove current "scratch" build images.
 	 */
 
@@ -44,32 +44,30 @@ def removeBuildImages(String imageName, String tier) {
 		int lowestBuild = priorBuild - 10
 		if (lowestBuild < 1) { lowestBuild = 1 }
 
-		for (hostSSHCredentials in deployDockerCompose.publishCredentialsList(tier, '')) {
-
-			// Remove the temporary build image.
-			// Delete each prior "develop" BUILD_ID, except the current build.
-			for (int buildId = priorBuild - 1; buildId >= lowestBuild; buildId--) {
-				sshPublisher(publishers: [
-				    sshPublisherDesc(configName: hostSSHCredentials,
-				    transfers: [sshTransfer(
-				    execCommand: """
+		// Remove the temporary build image.
+		// Delete each prior "develop" BUILD_ID, except the current build.
+		for (int buildId = priorBuild - 1; buildId >= lowestBuild; buildId--) {
+			sshPublisher(publishers: [
+			    sshPublisherDesc(configName: hostSSHCredentials,
+			    transfers: [sshTransfer(
+			    execCommand: """
 sudo docker rmi ${fullImageName} || true && \\
 sudo docker rmi ${baseImageName}:${tier}_${buildId} || true
 """,
-				    execTimeout: 720000)], verbose: true)])
-			}
+			    execTimeout: 720000)], verbose: true)])
 		}
-		
 	}
 	else {
 		echo "SKIP Remove Docker build images ... This is not a Git build."
 	}
 }
 
-def call(String imageName, String hostSSHCredentials, Boolean gcDocker = true) {
-	removeBuildImages(imageName, hostSSHCredentials)
+def call(String imageName, String tier, Boolean gcDocker = true) {
+	for (hostSSHCredentials in deployDockerCompose.publishCredentialsList(tier, '')) {
+		removeBuildImages(imageName, hostSSHCredentials)
 
-	if (gcDocker) {
-		removeGarbage(hostSSHCredentials)
+		if (gcDocker) {
+			removeGarbage(hostSSHCredentials)
+		}
 	}
 }
