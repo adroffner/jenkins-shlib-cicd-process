@@ -27,7 +27,8 @@ def call(String imageName,
 	boolean skipTests = (healthyCoverageAbove <= 0)
 
 	if (skipTests || unitTestImage == null) {
-		echo "Skip Unit Tests: healthy at ${healthyCoverageAbove}% or no image=${unitTestImage}"
+		echo "Skip Unit Tests: unstable at ${healthyCoverageAbove}% or no image=${fullImageName}"
+		currentBuild.result = 'UNSTABLE'
 	}
 	else {
 		// Start docker container and execute run_tests.sh
