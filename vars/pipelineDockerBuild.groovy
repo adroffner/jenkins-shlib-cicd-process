@@ -34,7 +34,8 @@ def call(String imageName,
 			    if ("${env.BRANCH_NAME}" == 'develop') {
 			    	mergeWithBranch = 'master'
 			    }
-			    preventMergeConflict(mergeWithBranch)
+			    // preventMergeConflict(mergeWithBranch)
+			    echo('Skip on CFA for today!')
 			}
 		    }
 		    post {
