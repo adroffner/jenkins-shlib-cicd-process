@@ -102,7 +102,7 @@ def call(String imageName, String remoteDirectory,
 					execCommand: """/bin/bash -c ' \\
 	sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
 	${addNetworkShell} && \\
-	${sharedVolume} && \\
+	${addVolumeShell} && \\
 	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
 	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
 	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
