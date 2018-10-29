@@ -100,8 +100,14 @@ def call(String imageName,
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
 				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier)
 			}
+    
 		    }
 		}
+
+    stage('Publish Swagger Documentation') {
+        when { branch 'develop'} 
+        echo 'Inside Swagger publish step'
+    }
 	    }
 	    post {
 		always {
