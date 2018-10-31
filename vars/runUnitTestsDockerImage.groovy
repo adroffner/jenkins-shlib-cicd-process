@@ -16,6 +16,17 @@
  * 	"JUnit Plugin", "Cobertura Plugin", "Warnings Plugin"
  */
 
+def getServerUser(String tier, String yamlFileDirectory = '.') {
+	// Returns the server username or null when the YAML has none.
+	try {
+		def composeYaml = readYaml(file: "${yamlFileDirectory}/docker-compose-${tier}.yml")
+		return composeYaml.services.web.user
+	} catch(Exception e) {
+		echo("YAML File \"docker-compose-${tier}.yml\" is unreadable...use 2-space indentation")
+		return null
+	}
+}
+
 def call(String imageName,
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
@@ -32,11 +43,15 @@ def call(String imageName,
 	}
 	else {
 		// Start docker container and execute run_tests.sh
+		// --user="`/usr/bin/id --user \$(whoami)`" \\
 		script {
+			// every tier should have the same username.
+			String username = getServerUser('prod')
+
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
 && docker run \\
-	--user="`/usr/bin/id --user \$(whoami)`" \\
+	--user="${username}" \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/test-reports" ${fullImageName}
 """
