@@ -43,10 +43,12 @@ def call(String imageName,
 	}
 	else {
 		// Start docker container and execute run_tests.sh
-		// --user="`/usr/bin/id --user \$(whoami)`" \\
 		script {
 			// every tier should have the same username.
 			String username = getServerUser('prod')
+			if (null == username) {
+				error('docker-compose YAML file must declare "user:"')
+			}
 
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
