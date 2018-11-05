@@ -105,8 +105,23 @@ def call(String imageName,
 		}
 
     stage('Publish Swagger Documentation') {
-        when { branch 'develop'} 
-        echo 'Inside Swagger publish step'
+        when { branch 'master'} 
+        steps {
+          script {
+            try {
+              serverName = findServerName()
+              // publishSwaggerJson(serverName)
+              //Temporary for testing
+              publishSwaggerJson("micro.dev.att.com:8045", "micro.dev.att.com:8045")
+              
+            } catch (Exception e) {
+              echo 'There was an error publishing the Swagger Json.'
+              println(e.getMessage())
+              currentBuild.result = "UNSTABLE"
+            }
+            
+          }
+        }
     }
 	    }
 	    post {
