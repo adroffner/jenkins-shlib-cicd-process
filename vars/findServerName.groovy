@@ -4,6 +4,12 @@
   * Required Plugins:
 
   "Pipeline Utility Steps"
+
+  Requires script approval for:
+    parent
+    text
+    File
+    String
 */
 
 def call(serverConfig="server_config.py") {
@@ -13,7 +19,8 @@ def call(serverConfig="server_config.py") {
       def projectName = new File(server_config_path).parent
       baseDir = "${env.WORKSPACE}/$projectName"
       server_config_contents = new File("${baseDir}\\${serverConfig.py}").text
-      def serverName = "${server_config_contents}"=~/[^"].*\.web\..*:\d+[^"]/
+      def serverName = "${server_config_contents}"=~/".*\.web\..*:\d+\"/
+      serverName = serverName[0].replaceAll("\"", "")
       println ("Server name found in server_config.py: ${serverName}")
       return serverName
   }
