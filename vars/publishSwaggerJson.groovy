@@ -46,11 +46,10 @@ def call(String serverName) {
 
   postResponse = postRestAPI(swaggerAPIHost, [current_server_name: serverName]])
   
-  if(post[0] == 200 ) {
+  if(postResponse[0] == 200 ) {
     println('Swagger publish successful')
-    println(postResponse[1].text)
   } else {
     println('Swagger publish step encountered an error.')
-    println(postResponse[1].text)
   }
+  println(postResponse[1].text)
 }
