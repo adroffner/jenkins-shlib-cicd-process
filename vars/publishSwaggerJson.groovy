@@ -20,7 +20,6 @@ def swaggerHost() {
   return "http://micro.dev.att.com:8045"
 }
 
-
 def postRestAPI(url, inputPayload) {
   def post = new URL(url).openConnection();
   inputPayload = JsonOutput.toJson(inputPayload)
@@ -38,8 +37,6 @@ def postRestAPI(url, inputPayload) {
     return [statusCode, post.getErrorStream()]
   }
 }
-
-
 
 def call(String serverName) {
   swaggerAPIHost = swaggerHost() + "/swagger/createWikiEntry"
