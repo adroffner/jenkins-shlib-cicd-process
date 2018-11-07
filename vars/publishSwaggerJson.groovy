@@ -1,9 +1,11 @@
 /* 
   Module accepting a server name that will post to the Swagger API that will publish swagger documentation and API gateway onloading based on the contents of the JSON
+
+  Requires script approval for
 */
 import groovy.json.JsonOutput
 
-def call(String serverName, String swaggerHost="http://127.0.0.1:8045") {
+def call(String serverName, String swaggerHost="http://micro.dev.att.com:8045") {
   swaggerHost = "${swaggerHost}/swagger/createWikiEntry"
   def post = new URL(swaggerHost).openConnection();
     message = [current_server_name: serverName]
@@ -21,5 +23,6 @@ def call(String serverName, String swaggerHost="http://127.0.0.1:8045") {
       println(post.getInputStream().text)
   }
       println('Swagger publish step encountered an error.')
-      println(post.getErrorStream().text;
+      println(post.getErrorStream().text)
+      currentBuild.result = "UNSTABLE"
 }
