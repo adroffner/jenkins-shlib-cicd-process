@@ -4,14 +4,15 @@
   Requires script approval for:
     URL
     JsonOutput
-    openConnection
-    getInputStream
-    getOuputStream
-    getErrorStream
-    setDoOutput
-    setRequestProperty
-    getResponseCode
-    text
+    method java.net.URL openConnection
+    method java.net.URLConnection getInputStream
+    method java.net.URLConnection getOutputStream
+    java.net.HttpURLConnection getErrorStream
+    method java.net.URLConnection setDoOutput boolean
+    method java.net.URLConnection setRequestProperty java.lang.String 
+    method java.net.URLConnection getResponseCode
+    method java.net.URLConnection getOutputStream.text
+    method java.io.OutputStream write byte[]
 */
 import groovy.json.JsonOutput
 
@@ -29,7 +30,13 @@ def postRestAPI(url, inputPayload) {
   post.setDoOutput(true)
   post.setRequestProperty("Content-Type", "application/json")
   post.getOutputStream().write(inputPayload.getBytes("UTF-8"));
-  return post
+  statusCode = post.getResponseCode();
+  if(statusCode.equals(200)) {
+    return [statusCode, post.getInputStream()]
+  } else {
+    currentBuild.result = "UNSTABLE"
+    return [statusCode, post.getErrorStream()]
+  }
 }
 
 
@@ -37,14 +44,13 @@ def postRestAPI(url, inputPayload) {
 def call(String serverName) {
   swaggerAPIHost = swaggerHost() + "/swagger/createWikiEntry"
 
-  post = postRestAPI(swaggerAPIHost, [current_server_name: serverName]])
-  def statusCode = post.getResponseCode();
-  println(statusCode);
-  if(statusCode.equals(200)) {
+  postResponse = postRestAPI(swaggerAPIHost, [current_server_name: serverName]])
+  
+  if(post[0] == 200 ) {
     println('Swagger publish successful')
-    println(post.getInputStream().text)
-  }
+    println(postResponse[1].text)
+  } else {
     println('Swagger publish step encountered an error.')
-    println(post.getErrorStream().text)
-    currentBuild.result = "UNSTABLE"
+    println(postResponse[1].text)
+  }
 }
