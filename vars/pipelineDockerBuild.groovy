@@ -100,8 +100,26 @@ def call(String imageName,
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
 				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier)
 			}
+    
 		    }
 		}
+
+    stage('Publish Swagger Documentation') {
+        when { branch 'master'} 
+        steps {
+          script {
+            try {
+              serverName = findServerName()
+              publishSwaggerJson(serverName)              
+            } catch (Exception e) {
+              echo 'There was an error publishing the Swagger Json.'
+              println(e.getMessage())
+              currentBuild.result = "UNSTABLE"
+            }
+            
+          }
+        }
+    }
 	    }
 	    post {
 		always {
