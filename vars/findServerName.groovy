@@ -25,7 +25,7 @@ def call(serverConfig="server_config.py") {
 
       // Parse serverName (hostname and port) string from contents.
       def serverName = "${server_config_contents}" =~ /['"][^'"\s]*[.]web[.][^'"\s]*:\d+['"]/
-      // serverName = serverName[0].replaceAll("\"", "").replaceAll("'", "")
+      serverName = serverName[0] // assume first match is right
 
       println ("Server name found in server_config.py: ${serverName}")
       return serverName
