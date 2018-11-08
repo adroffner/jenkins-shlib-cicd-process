@@ -41,7 +41,7 @@ def postRestAPI(url, inputPayload) {
 def call(String serverName) {
   swaggerAPIHost = swaggerHost() + "/swagger/createWikiEntry"
 
-  (status, response) = postRestAPI(swaggerAPIHost, [current_server_name: serverName]])
+  (status, response) = postRestAPI(swaggerAPIHost, [current_server_name: serverName])
   
   if(status == 200 ) {
     println('Swagger publish successful')
