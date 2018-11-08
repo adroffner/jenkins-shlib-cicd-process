@@ -105,8 +105,7 @@ def call(String imageName,
 		}
 
     stage('Publish Swagger Documentation') {
-        // when { branch 'master'} 
-        when { branch 'develop'} 
+        when { branch 'master'} 
         steps {
           script {
             try {
