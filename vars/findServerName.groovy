@@ -16,13 +16,17 @@
 
 def call(serverConfig="server_config.py") {
   try {
+      // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       server_config_path = "${server_config[0].path}"
       def projectName = new File(server_config_path).parent
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
       server_config_contents = new File("${baseDir}${File.separator}${serverConfig}").text
-      def serverName = "${server_config_contents}"=~['"].*\.web\..*:\d+['"]/
-      serverName = serverName[0].replaceAll("\"", "").replaceAll("'", "")
+
+      // Parse serverName (hostname and port) string from contents.
+      def serverName = "${server_config_contents}" =~ /['"][^'"\s]*[.]web[.][^'"\s]*:\d+['"]/
+      // serverName = serverName[0].replaceAll("\"", "").replaceAll("'", "")
+
       println ("Server name found in server_config.py: ${serverName}")
       return serverName
   }
