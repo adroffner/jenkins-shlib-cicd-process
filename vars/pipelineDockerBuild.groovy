@@ -104,11 +104,13 @@ def call(String imageName,
 		    }
 		}
 
+	/** ================ **
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
         steps {
           script {
             try {
+	      // Bug from MIC-1187: findServerName() returns null String.
               serverName = findServerName()
               publishSwaggerJson(serverName)              
             } catch (Exception e) {
@@ -120,6 +122,8 @@ def call(String imageName,
           }
         }
     }
+	** ================ **/
+
 	    }
 	    post {
 		always {
