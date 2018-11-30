@@ -121,7 +121,7 @@ def call(String imageName,
         }
     }
 	    }
-	    post {
+	    // post {
 		// always {
 			// emailBuildReport(emailReportList)
 			// jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
@@ -145,6 +145,6 @@ def call(String imageName,
 		// 	cleanUpDocker("${imageName}", tier)
 		//     }
 		// }
-	    }
+	    // }
 	}
 }
