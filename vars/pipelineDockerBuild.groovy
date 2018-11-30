@@ -108,24 +108,18 @@ def call(String imageName,
         when { branch 'master'} 
             steps {
                 node ("master") {
-              // dir('/greta_api/') {
-
-              //     sh 'echo "hello"'
-              // }
-              script {
-                try {
-                  serverName = findServerName()
-                  println(serverName)
-                  // publishSwaggerJson(serverName)              
-                } catch (Exception e) {
-                  echo 'There was an error publishing the Swagger Json.'
-                  println(e.getMessage())
-                  currentBuild.result = "UNSTABLE"
+                    script {
+                        try {
+                            serverName = findServerName()
+                            publishSwaggerJson(serverName)              
+                        } catch (Exception e) {
+                            echo 'There was an error publishing the Swagger Json.'
+                            println(e.getMessage())
+                            currentBuild.result = "UNSTABLE"
+                        }
+                    }
                 }
-                
-              }
             }
-        }
     }
 	    }
 	    // post {
