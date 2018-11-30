@@ -25,7 +25,7 @@ def call(serverConfig="server_config.py") {
       baseDir = "${env.WORKSPACE}/${projectName}"
       println(baseDir)
       filePath = "${baseDir}/${serverConfig}"
-      println('FILEPATH:' , filePath)
+      println(filePath)
       
 
       server_config_contents = new File(server_config_path).text
