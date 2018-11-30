@@ -107,6 +107,7 @@ def call(String imageName,
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
         steps {
+          bash "cd greta_api && ls -al"
           script {
             try {
               serverName = findServerName()
