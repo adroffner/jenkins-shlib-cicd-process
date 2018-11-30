@@ -19,9 +19,13 @@ def call(serverConfig="server_config.py") {
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       server_config_path = "${server_config[0].path}"
+      println(server_config_path)
       def projectName = new File(server_config_path).parent
+      println(projectName)
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
+      println(baseDir)
       server_config_contents = new File("${baseDir}${File.separator}${serverConfig}").text
+      println(server_config_contents)
 
       // Parse serverName (hostname and port) string from contents.
       def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
