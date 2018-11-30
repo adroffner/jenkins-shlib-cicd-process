@@ -28,7 +28,7 @@ def call(serverConfig="server_config.py") {
       println(filePath)
       
 
-      // server_config_contents = new File(filePath).text
+      server_config_contents = new File(filePath).text
       // println(server_config_contents)
 
       // // Parse serverName (hostname and port) string from contents.
@@ -39,7 +39,9 @@ def call(serverConfig="server_config.py") {
       // return serverName
       return 'hello'
   }
-  catch (Exception) {
+  catch (Exception e) {
+      println('inside exception of findservername')
+      println(e.getMessage())
       currentBuild.result = "UNSTABLE"
   }
 }

@@ -107,10 +107,10 @@ def call(String imageName,
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
         steps {
-          dir('/greta_api/') {
+          // dir('/greta_api/') {
 
-              sh 'echo "hello"'
-          }
+          //     sh 'echo "hello"'
+          // }
           script {
             try {
               serverName = findServerName()
