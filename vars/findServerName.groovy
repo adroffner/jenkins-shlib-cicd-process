@@ -29,7 +29,9 @@ def call(serverConfig="server_config.py") {
       
       println('SERVER CONFIG PATH!!!!!')
       println(server_config_path)
-      server_config_contents = new File(server_config_path).text
+
+      def server_config_contents = readFile "${filePath}"
+      // server_config_contents = new File(server_config_path).text
       println(server_config_contents)
 
       // // Parse serverName (hostname and port) string from contents.
