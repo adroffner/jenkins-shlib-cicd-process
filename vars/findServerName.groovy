@@ -22,9 +22,9 @@ def call(serverConfig="server_config.py") {
       println(server_config_path)
       def projectName = new File(server_config_path).parent
       println(projectName)
-      baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
+      baseDir = "${env.WORKSPACE}/${projectName}"
       println(baseDir)
-      filePath = "${baseDir}${File.separator}${serverConfig}"
+      filePath = "${baseDir}/${serverConfig}"
       println(filePath)
       server_config_contents = new File(filePath).text
       println(server_config_contents)
