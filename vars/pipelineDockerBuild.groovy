@@ -106,8 +106,8 @@ def call(String imageName,
 
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
-        node ("master") {
             steps {
+                node ("master") {
               // dir('/greta_api/') {
 
               //     sh 'echo "hello"'
