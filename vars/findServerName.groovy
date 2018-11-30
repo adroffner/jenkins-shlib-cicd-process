@@ -27,7 +27,8 @@ def call(serverConfig="server_config.py") {
       filePath = "${baseDir}/${serverConfig}"
       println(filePath)
       
-
+      println('SERVER CONFIG PATH!!!!!')
+      println(server_config_path)
       server_config_contents = new File(server_config_path).text
       println(server_config_contents)
 
