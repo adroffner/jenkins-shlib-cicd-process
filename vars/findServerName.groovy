@@ -24,7 +24,9 @@ def call(serverConfig="server_config.py") {
       println(projectName)
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
       println(baseDir)
-      server_config_contents = new File("${baseDir}${File.separator}${serverConfig}").text
+      filePath = "${baseDir}${File.separator}${serverConfig}"
+      println(filePath)
+      server_config_contents = new File(filePath).text
       println(server_config_contents)
 
       // Parse serverName (hostname and port) string from contents.
