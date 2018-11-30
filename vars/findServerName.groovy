@@ -26,6 +26,7 @@ def call(serverConfig="server_config.py") {
       println(baseDir)
       filePath = "${baseDir}/${serverConfig}"
       println(filePath)
+      sh 'ls -al'
       server_config_contents = new File(filePath).readlines()
       println(server_config_contents)
 

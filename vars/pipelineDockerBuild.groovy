@@ -126,25 +126,25 @@ def call(String imageName,
 			// emailBuildReport(emailReportList)
 			// jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
 		// }
-		cleanup {
-		    script {
-			deleteDir() // clean up our workspace
+		// cleanup {
+		//     script {
+		// 	// deleteDir() // clean up our workspace
 
-			def tier = 'dev' // QA Deployment
+		// 	def tier = 'dev' // QA Deployment
 
-			if ("${env.BRANCH_NAME}" == 'master') {
-				// Production "latest" deployment
-				tier = 'prod'
-			}
+		// 	if ("${env.BRANCH_NAME}" == 'master') {
+		// 		// Production "latest" deployment
+		// 		tier = 'prod'
+		// 	}
 
-			if (env.BRANCH_NAME.startsWith('release/')) {
-				// UAT "release/*" Deployment
-				tier = 'stage'
-			}
+		// 	if (env.BRANCH_NAME.startsWith('release/')) {
+		// 		// UAT "release/*" Deployment
+		// 		tier = 'stage'
+		// 	}
 
-			cleanUpDocker("${imageName}", tier)
-		    }
-		}
+		// 	cleanUpDocker("${imageName}", tier)
+		//     }
+		// }
 	    }
 	}
 }
