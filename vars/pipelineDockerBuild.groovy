@@ -115,6 +115,7 @@ def call(String imageName,
               script {
                 try {
                   serverName = findServerName()
+                  println(serverName)
                   // publishSwaggerJson(serverName)              
                 } catch (Exception e) {
                   echo 'There was an error publishing the Swagger Json.'

@@ -33,12 +33,11 @@ def call(serverConfig="server_config.py") {
       println(server_config_contents)
 
       // // Parse serverName (hostname and port) string from contents.
-      // def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
-      // serverName = serverName[0] // assume first match is right
+      def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
+      serverName = serverName[0] // assume first match is right
 
-      // println ("Server name found in server_config.py: ${serverName}")
-      // return serverName
-      return 'hello'
+      println ("Server name found in server_config.py: ${serverName}")
+      return serverName
   }
   catch (Exception e) {
       println('inside exception of findservername')
