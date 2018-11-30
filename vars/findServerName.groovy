@@ -28,8 +28,8 @@ def call(serverConfig="server_config.py") {
       println('FILEPATH:' , filePath)
       
 
-      server_config_contents = new File(server_config).text
-      println(server_config_contents)
+      server_config_contents = new File(server_config_path).text
+      // println(server_config_contents)
 
       // // Parse serverName (hostname and port) string from contents.
       // def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
