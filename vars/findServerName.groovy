@@ -26,17 +26,18 @@ def call(serverConfig="server_config.py") {
       println(baseDir)
       filePath = "${baseDir}/${serverConfig}"
       println(filePath)
-      sh ('ls -al')
+      
 
-      server_config_contents = new File(filePath).text
-      println(server_config_contents)
+      // server_config_contents = new File(filePath).text
+      // println(server_config_contents)
 
-      // Parse serverName (hostname and port) string from contents.
-      def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
-      serverName = serverName[0] // assume first match is right
+      // // Parse serverName (hostname and port) string from contents.
+      // def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
+      // serverName = serverName[0] // assume first match is right
 
-      println ("Server name found in server_config.py: ${serverName}")
-      return serverName
+      // println ("Server name found in server_config.py: ${serverName}")
+      // return serverName
+      return 'hello'
   }
   catch (Exception) {
       currentBuild.result = "UNSTABLE"

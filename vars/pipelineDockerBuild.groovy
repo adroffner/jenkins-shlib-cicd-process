@@ -107,11 +107,11 @@ def call(String imageName,
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
         steps {
-          sh "cd greta_api && ls -al"
+          sh ("cd greta_api && ls -al")
           script {
             try {
               serverName = findServerName()
-              publishSwaggerJson(serverName)              
+              // publishSwaggerJson(serverName)              
             } catch (Exception e) {
               echo 'There was an error publishing the Swagger Json.'
               println(e.getMessage())
