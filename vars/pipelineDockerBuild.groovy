@@ -107,7 +107,7 @@ def call(String imageName,
 ** Cut out all other stages  **/
 
     stage('Publish Swagger Documentation') {
-        when { branch 'bugfix/MIC-1376-troubleshoot-swagger-pipeline-step'} 
+        when { branch 'feature/MIC-1306-region-lookup-microservice'} 
             steps {
                 node ("master") {
                     script {
