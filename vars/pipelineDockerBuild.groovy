@@ -27,6 +27,7 @@ def call(String imageName,
 	    agent { label "${nodeLabel}" }
 	 
 	    stages {
+/** Cut out all other stages  **
 		stage('Prevent Merge Conflict') { 
 		    steps {
 			script {
@@ -103,9 +104,10 @@ def call(String imageName,
     
 		    }
 		}
+** Cut out all other stages  **/
 
     stage('Publish Swagger Documentation') {
-        when { branch 'master'} 
+        when { branch 'feature/MIC-1306-region-lookup-microservice'} 
             steps {
                 node ("master") {
                     script {
