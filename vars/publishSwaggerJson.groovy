@@ -15,13 +15,19 @@
     method java.io.OutputStream write byte[]
 */
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurperClassic
+
+@NonCPS
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
 
 def swaggerHost() {
   return "http://micro.dev.att.com:8045"
 }
 
 def postRestAPI(url, inputPayload) {
-  def post = new URL(url).openConnection();
+  transient post = new URL(url).openConnection();
   inputPayload = JsonOutput.toJson(inputPayload)
   println("Posting to host: ${url}")
   println(inputPayload)
@@ -29,24 +35,27 @@ def postRestAPI(url, inputPayload) {
   post.setDoOutput(true)
   post.setRequestProperty("Content-Type", "application/json")
   post.getOutputStream().write(inputPayload.getBytes("UTF-8"));
-  statusCode = post.getResponseCode();
+  def statusCode = post.getResponseCode();
   if(statusCode.equals(200)) {
-    return [statusCode, post.getInputStream()]
+    response = jsonParse(post.getInputStream().text)
+    return [statusCode, response]
   } else {
     currentBuild.result = "UNSTABLE"
-    return [statusCode, post.getErrorStream()]
+    response = jsonParse(post.getErrorStream().text)
+    return [statusCode, response]
   }
 }
 
 def call(String serverName) {
-  swaggerAPIHost = swaggerHost() + "/swagger/createWikiEntry"
+  def swaggerAPIHost = swaggerHost() + "/swagger/createWikiEntry"
 
   (status, response) = postRestAPI(swaggerAPIHost, [current_server_name: serverName])
   
-  if(status == 200 ) {
+
+  if (status == 200 ) {
     println('Swagger publish successful')
   } else {
     println('Swagger publish step encountered an error.')
   }
-  println(response.text)
+  println(response)
 }
