@@ -105,7 +105,7 @@ def call(String imageName,
 		}
 
     stage('Publish Swagger Documentation') {
-        when { branch 'feature/MIC-1306-region-lookup-microservice'} 
+        when { branch 'develop'} 
             steps {
                 node ("master") {
                     script {
