@@ -27,7 +27,6 @@ def call(String imageName,
 	    agent { label "${nodeLabel}" }
 	 
 	    stages {
-/** Cut out all other stages  **
 		stage('Prevent Merge Conflict') { 
 		    steps {
 			script {
@@ -104,7 +103,6 @@ def call(String imageName,
     
 		    }
 		}
-** Cut out all other stages  **/
 
     stage('Publish Swagger Documentation') {
         when { branch 'feature/MIC-1306-region-lookup-microservice'} 
@@ -131,7 +129,7 @@ def call(String imageName,
 		}
 		cleanup {
 		    script {
-			// deleteDir() // clean up our workspace
+			deleteDir() // clean up our workspace
 
 			def tier = 'dev' // QA Deployment
 
