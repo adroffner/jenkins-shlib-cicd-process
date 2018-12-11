@@ -20,8 +20,8 @@ def call(serverConfig="server_config.py") {
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       server_config_path = "${server_config[0].path}"
       def projectName = new File(server_config_path).parent
-      baseDir = "${env.WORKSPACE}/${projectName}"
-      filePath = "${baseDir}/${serverConfig}"
+      baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
+      filePath = "${baseDir}${File.separator}${serverConfig}"
       
 
       // def server_config_contents = readFile "${filePath}"
@@ -34,7 +34,6 @@ def call(serverConfig="server_config.py") {
       return serverName
   }
   catch (Exception e) {
-      println('inside exception of findservername')
       println(e.getMessage())
       currentBuild.result = "UNSTABLE"
   }
