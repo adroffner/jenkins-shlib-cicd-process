@@ -21,16 +21,20 @@ def call(serverConfig="server_config.py") {
       server_config_path = "${server_config[0].path}"
       def projectName = new File(server_config_path).parent
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
-      server_config_contents = new File("${baseDir}${File.separator}${serverConfig}").text
+      filePath = "${baseDir}${File.separator}${serverConfig}"
+      
 
-      // Parse serverName (hostname and port) string from contents.
+      // def server_config_contents = readFile "${filePath}"
+      server_config_contents = new File(filePath).text
+
+      // // Parse serverName (hostname and port) string from contents.
       def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
       serverName = serverName[0] // assume first match is right
 
-      println ("Server name found in server_config.py: ${serverName}")
       return serverName
   }
-  catch (Exception) {
+  catch (Exception e) {
+      println(e.getMessage())
       currentBuild.result = "UNSTABLE"
   }
 }
