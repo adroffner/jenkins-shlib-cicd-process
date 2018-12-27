@@ -104,26 +104,23 @@ def call(String imageName,
 		    }
 		}
 
-	/** ================ **
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
-        steps {
-          script {
-            try {
-	      // Bug from MIC-1187: findServerName() returns null String.
-              serverName = findServerName()
-              publishSwaggerJson(serverName)              
-            } catch (Exception e) {
-              echo 'There was an error publishing the Swagger Json.'
-              println(e.getMessage())
-              currentBuild.result = "UNSTABLE"
+            steps {
+                node ("master") {
+                    script {
+                        try {
+                            serverName = findServerName()
+                            publishSwaggerJson(serverName)              
+                        } catch (Exception e) {
+                            echo 'There was an error publishing the Swagger Json.'
+                            println(e.getMessage())
+                            currentBuild.result = "UNSTABLE"
+                        }
+                    }
+                }
             }
-            
-          }
-        }
     }
-	** ================ **/
-
 	    }
 	    post {
 		always {
