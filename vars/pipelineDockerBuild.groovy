@@ -18,7 +18,7 @@
 
 def call(String imageName,
 	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
-	 nodeLabel = 'microservices',
+	 nodeLabel = 'master',
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
 	 int failureCoverageBelow = 65) {
