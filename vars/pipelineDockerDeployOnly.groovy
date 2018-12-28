@@ -14,6 +14,9 @@ def call(String imageName,
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
+	    options {
+                disableConcurrentBuilds()
+        }
 	    stages {
 		stage('Deploy Service') { 
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }

@@ -25,6 +25,9 @@ def call(String imageName,
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
+	    options {
+                disableConcurrentBuilds()
+        }
 	    stages {
 		stage('Prevent Merge Conflict') { 
 		    steps {
@@ -50,7 +53,6 @@ def call(String imageName,
 			buildDockerImage "${imageName}"
 		    }
             options {
-                disableConcurrentBuilds()
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
 		    }
@@ -75,7 +77,6 @@ def call(String imageName,
 		stage('Push Docker Image') { 
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
-                disableConcurrentBuilds()
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
 		    }
@@ -86,7 +87,6 @@ def call(String imageName,
 		stage('Deploy Service') { 
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
-                disableConcurrentBuilds()
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
 		    }
