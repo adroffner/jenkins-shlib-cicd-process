@@ -52,8 +52,8 @@ def call(String imageName,
 		    }
 		}
 	    }
-	    post {
-		/* always {
+	    /* post {
+		always {
 			emailBuildReport(emailReportList)
 			jiraBuildReport "Automated Deployment: ${currentBuild.currentResult}"
 		}
@@ -75,7 +75,7 @@ def call(String imageName,
 
 			cleanUpDocker("${imageName}", tier)
 		    }
-		} */
-	    }
+		}
+	    } */
 	}
 }
