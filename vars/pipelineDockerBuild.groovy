@@ -22,7 +22,7 @@ def call(String imageName,
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
 	 int failureCoverageBelow = 65,
-   isCron = false) {
+   boolean isCron = false) {
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
