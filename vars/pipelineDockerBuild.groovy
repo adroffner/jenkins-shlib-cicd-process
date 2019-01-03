@@ -29,7 +29,7 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
-		stage('Prevent Merge Conflict') { 
+		/* stage('Prevent Merge Conflict') {
 		    steps {
 			script {
 			    def mergeWithBranch = 'develop'
@@ -56,7 +56,7 @@ def call(String imageName,
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
 		    }
-		}
+		} */
 		stage('Run Unit Tests') { 
 		    when { not { branch 'master' } }
 		    steps {
@@ -65,16 +65,16 @@ def call(String imageName,
 						unstableCoverageBelow,
 						failureCoverageBelow)
 		    }
-		    post {
+		    /* post {
 			fixed {
 				jiraBuildReport "RESOLVED Unit Test Suite fixed \"${env.BRANCH_NAME}\""
 			}
 			regression {
 				jiraBuildReport "ERRORS Unit Test Suite regression \"${env.BRANCH_NAME}\""
 			}
-		    }
+		    } */
 		}
-		stage('Push Docker Image') { 
+		/* stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
@@ -83,8 +83,8 @@ def call(String imageName,
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
-		}
-		stage('Deploy Service') { 
+		} */
+		/* stage('Deploy Service') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
@@ -116,9 +116,9 @@ def call(String imageName,
 			}
     
 		    }
-		}
+		} */
 
-    stage('Publish Swagger Documentation') {
+    /* stage('Publish Swagger Documentation') {
         when { branch 'master'} 
             steps {
                 node ("master") {
@@ -134,7 +134,7 @@ def call(String imageName,
                     }
                 }
             }
-    }
+    } */
 	    }
 	    /* post {
 		always {
