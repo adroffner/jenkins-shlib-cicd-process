@@ -10,7 +10,7 @@
 
 def call(String imageName,
 	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
-	 nodeLabel = 'master') {
+	 nodeLabel = 'microservices') {
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
@@ -21,7 +21,6 @@ def call(String imageName,
 		stage('Deploy Service') { 
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    options {
-                disableConcurrentBuilds()
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
             }
@@ -52,7 +51,7 @@ def call(String imageName,
 		    }
 		}
 	    }
-	    /* post {
+	    post {
 		always {
 			emailBuildReport(emailReportList)
 			jiraBuildReport "Automated Deployment: ${currentBuild.currentResult}"
@@ -76,6 +75,6 @@ def call(String imageName,
 			cleanUpDocker("${imageName}", tier)
 		    }
 		}
-	    } */
+	    }
 	}
 }

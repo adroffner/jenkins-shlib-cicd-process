@@ -18,7 +18,7 @@
 
 def call(String imageName,
 	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
-	 nodeLabel = 'master',
+	 nodeLabel = 'microservices',
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
 	 int failureCoverageBelow = 65) {
@@ -29,7 +29,7 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
-		/* stage('Prevent Merge Conflict') {
+		stage('Prevent Merge Conflict') {
 		    steps {
 			script {
 			    def mergeWithBranch = 'develop'
@@ -47,7 +47,7 @@ def call(String imageName,
 				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
 			}
 		    }
-		} */
+		}
 		stage('Build Docker Image') { 
 		    steps { 
 			buildDockerImage "${imageName}"
@@ -65,16 +65,16 @@ def call(String imageName,
 						unstableCoverageBelow,
 						failureCoverageBelow)
 		    }
-		    /* post {
+		    post {
 			fixed {
 				jiraBuildReport "RESOLVED Unit Test Suite fixed \"${env.BRANCH_NAME}\""
 			}
 			regression {
 				jiraBuildReport "ERRORS Unit Test Suite regression \"${env.BRANCH_NAME}\""
 			}
-		    } */
+		    }
 		}
-		/* stage('Push Docker Image') {
+		stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
@@ -83,8 +83,8 @@ def call(String imageName,
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
-		} */
-		/* stage('Deploy Service') {
+		}
+		stage('Deploy Service') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
@@ -116,9 +116,9 @@ def call(String imageName,
 			}
     
 		    }
-		} */
+		}
 
-    /* stage('Publish Swagger Documentation') {
+    stage('Publish Swagger Documentation') {
         when { branch 'master'} 
             steps {
                 node ("master") {
@@ -134,9 +134,9 @@ def call(String imageName,
                     }
                 }
             }
-    } */
+    }
 	    }
-	    /* post {
+	    post {
 		always {
 			emailBuildReport(emailReportList)
 			jiraBuildReport "Automated Build: ${currentBuild.currentResult}"
@@ -160,6 +160,6 @@ def call(String imageName,
 			cleanUpDocker("${imageName}", tier)
 		    }
 		}
-	    } */
+	    }
 	}
 }
