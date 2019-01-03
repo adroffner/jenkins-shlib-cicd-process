@@ -47,7 +47,7 @@ def call(String imageName,
 				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
 			}
 		    }
-		}
+		} */
 		stage('Build Docker Image') { 
 		    steps { 
 			buildDockerImage "${imageName}"
@@ -56,7 +56,7 @@ def call(String imageName,
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
 		    }
-		} */
+		}
 		stage('Run Unit Tests') { 
 		    when { not { branch 'master' } }
 		    steps {
