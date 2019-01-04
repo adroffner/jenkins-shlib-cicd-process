@@ -67,9 +67,9 @@ def call(String imageName, String remoteDirectory,
 	}
 
 	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
-
+  def addNetworkShell = 'true'
 	/*def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
-	def addNetworkShell = 'true'
+
 	if (sharedNetwork != null) {
 		echo("Deployment requires shared network \"${sharedNetwork}\" ...")
 		addNetworkShell = "sudo docker network inspect ${sharedNetwork} || sudo docker network create -d bridge ${sharedNetwork}"
