@@ -100,7 +100,7 @@ def call(String imageName, String remoteDirectory,
         sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
         sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
         """
-      if (isCron && hostSSHtarget != 'micro.prod'){
+      if (isCron && tier == 'prod' && hostSSHtarget != 'micro.prod'){
           execCmd = """/bin/bash -c ' \\
       sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
       ${addNetworkShell} && \\
