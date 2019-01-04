@@ -92,7 +92,7 @@ def call(String imageName, String remoteDirectory,
 		withCredentials([[$class: 'UsernamePasswordMultiBinding',
 			credentialsId: dockerCredentials,
 			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
-      echo("isCron \"${isCron})
+      echo("isCron \"${isCron}\"")
       echo(hostSSHtarget)
       def execCmd = """/bin/bash -c ' \\
         sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
