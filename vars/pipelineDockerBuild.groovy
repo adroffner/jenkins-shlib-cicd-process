@@ -29,7 +29,7 @@ def call(String imageName,
 
 	    stages {
 		stage('Deploy Service') {
-		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
+		    /*when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }*/
 		    steps {
 			script {
 				tier = 'prod'
