@@ -68,6 +68,7 @@ def call(String imageName, String remoteDirectory,
 
 	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
   def addNetworkShell = 'true'
+  def addVolumeShell = 'true'
 	/*def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
 
 	if (sharedNetwork != null) {
@@ -76,7 +77,7 @@ def call(String imageName, String remoteDirectory,
 	}
 
 	def sharedVolume = getExternalSharedVolume(tier, yamlFileDirectory)
-	def addVolumeShell = 'true'
+
 	if (sharedVolume != null) {
 		echo("Deployment requires shared volume \"${sharedVolume}\" ...")
 		addVolumeShell = "sudo docker volume inspect ${sharedVolume} || sudo docker volume create --name ${sharedVolume}"
