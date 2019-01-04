@@ -21,13 +21,14 @@ def call(String imageName,
 	 nodeLabel = 'microservices',
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
-	 int failureCoverageBelow = 65) {
+	 int failureCoverageBelow = 65,
+   boolean isCron = false) {
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
-	 
+
 	    stages {
-		stage('Prevent Merge Conflict') { 
+		stage('Prevent Merge Conflict') {
 		    steps {
 			script {
 			    def mergeWithBranch = 'develop'
@@ -46,12 +47,12 @@ def call(String imageName,
 			}
 		    }
 		}
-		stage('Build Docker Image') { 
-		    steps { 
+		stage('Build Docker Image') {
+		    steps {
 			buildDockerImage "${imageName}"
 		    }
 		}
-		stage('Run Unit Tests') { 
+		stage('Run Unit Tests') {
 		    when { not { branch 'master' } }
 		    steps {
 			runUnitTestsDockerImage("${imageName}",
@@ -68,13 +69,13 @@ def call(String imageName,
 			}
 		    }
 		}
-		stage('Push Docker Image') { 
+		stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
 		}
-		stage('Deploy Service') { 
+		stage('Deploy Service') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
 		    steps {
 			script {
@@ -98,20 +99,20 @@ def call(String imageName,
 				}
 
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
-				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier)
+				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier, isCron)
 			}
-    
+
 		    }
 		}
 
     stage('Publish Swagger Documentation') {
-        when { branch 'master'} 
+        when { branch 'master'}
             steps {
                 node ("master") {
                     script {
                         try {
                             serverName = findServerName()
-                            publishSwaggerJson(serverName)              
+                            publishSwaggerJson(serverName)
                         } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
                             println(e.getMessage())
