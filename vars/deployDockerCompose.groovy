@@ -92,6 +92,7 @@ def call(String imageName, String remoteDirectory,
 		withCredentials([[$class: 'UsernamePasswordMultiBinding',
 			credentialsId: dockerCredentials,
 			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
+      echo("isCron=\"${isCron}\" ...hostSSHtarget=\"${hostSSHtarget})
       def execCmd = """/bin/bash -c ' \\
         sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
         ${addNetworkShell} && \\
@@ -101,6 +102,7 @@ def call(String imageName, String remoteDirectory,
         sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
         """
       if (isCron && hostSSHtarget != 'micro.prod'){
+        	echo("inside isCRon condition")
           execCmd = """/bin/bash -c ' \\
       sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
       ${addNetworkShell} && \\
@@ -108,23 +110,6 @@ def call(String imageName, String remoteDirectory,
       sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName}
       """
       }
-
-			// Use Publish Over SSH: https://jenkins.io/doc/pipeline/steps/publish-over-ssh/
-			sshPublisher(publishers: [
-				sshPublisherDesc(configName: hostSSHtarget, // SSH Credentials
-				transfers: [
-					sshTransfer(
-					// excludes: '',
-					execCommand: execCmd,
-					execTimeout: 720000, flatten: true,
-					// makeEmptyDirs: false, noDefaultExcludes: false,
-					// patternSeparator: '[, ]+',
-					remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
-					// remoteDirectorySDF: false, removePrefix: '',
-					sourceFiles: "docker-compose-${tier}.yml")],
-					// usePromotionTimestamp: false, useWorkspaceInPromotion: false,
-					verbose: true)],
-					failOnError: true)
 		} // end withCredentials
 	}
 }
