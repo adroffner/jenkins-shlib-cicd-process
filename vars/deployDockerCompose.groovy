@@ -67,21 +67,20 @@ def call(String imageName, String remoteDirectory,
 	}
 
 	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
-  def addNetworkShell = 'true'
-  def addVolumeShell = 'true'
-	/*def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
 
+	def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
+	def addNetworkShell = 'true'
 	if (sharedNetwork != null) {
 		echo("Deployment requires shared network \"${sharedNetwork}\" ...")
 		addNetworkShell = "sudo docker network inspect ${sharedNetwork} || sudo docker network create -d bridge ${sharedNetwork}"
 	}
 
 	def sharedVolume = getExternalSharedVolume(tier, yamlFileDirectory)
-
+	def addVolumeShell = 'true'
 	if (sharedVolume != null) {
 		echo("Deployment requires shared volume \"${sharedVolume}\" ...")
 		addVolumeShell = "sudo docker volume inspect ${sharedVolume} || sudo docker volume create --name ${sharedVolume}"
-	}*/
+	}
 
 	// Set the image TAG in docker-compose YAML.
 	if (tier != 'prod') {
@@ -90,11 +89,9 @@ def call(String imageName, String remoteDirectory,
 
 	// Move the docker-compose YAML file over, download and run it.
 	for (hostSSHtarget in publishCredentialsList(tier, hostSSHCredentials)) {
-	/*	withCredentials([[$class: 'UsernamePasswordMultiBinding',
+		withCredentials([[$class: 'UsernamePasswordMultiBinding',
 			credentialsId: dockerCredentials,
-			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {*/
-      echo("isCron \"${isCron}\"")
-      echo("hostSSHtarget \"${hostSSHtarget}\"")
+			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
       def execCmd = """/bin/bash -c ' \\
         sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
         ${addNetworkShell} && \\
@@ -104,7 +101,6 @@ def call(String imageName, String remoteDirectory,
         sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
         """
       if (isCron && hostSSHtarget != 'micro.prod'){
-        	echo("inside isCRon condition")
           execCmd = """/bin/bash -c ' \\
       sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
       ${addNetworkShell} && \\
@@ -112,6 +108,23 @@ def call(String imageName, String remoteDirectory,
       sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName}
       """
       }
-	/*	} // end withCredentials*/
+
+			// Use Publish Over SSH: https://jenkins.io/doc/pipeline/steps/publish-over-ssh/
+			sshPublisher(publishers: [
+				sshPublisherDesc(configName: hostSSHtarget, // SSH Credentials
+				transfers: [
+					sshTransfer(
+					// excludes: '',
+					execCommand: execCmd,
+					execTimeout: 720000, flatten: true,
+					// makeEmptyDirs: false, noDefaultExcludes: false,
+					// patternSeparator: '[, ]+',
+					remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
+					// remoteDirectorySDF: false, removePrefix: '',
+					sourceFiles: "docker-compose-${tier}.yml")],
+					// usePromotionTimestamp: false, useWorkspaceInPromotion: false,
+					verbose: true)],
+					failOnError: true)
+		} // end withCredentials
 	}
 }
