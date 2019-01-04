@@ -89,11 +89,11 @@ def call(String imageName, String remoteDirectory,
 
 	// Move the docker-compose YAML file over, download and run it.
 	for (hostSSHtarget in publishCredentialsList(tier, hostSSHCredentials)) {
-		withCredentials([[$class: 'UsernamePasswordMultiBinding',
+	/*	withCredentials([[$class: 'UsernamePasswordMultiBinding',
 			credentialsId: dockerCredentials,
-			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
+			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {*/
       echo("isCron \"${isCron}\"")
-      echo(hostSSHtarget)
+      echo("hostSSHtarget \"${hostSSHtarget}\"")
       def execCmd = """/bin/bash -c ' \\
         sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
         ${addNetworkShell} && \\
@@ -111,6 +111,6 @@ def call(String imageName, String remoteDirectory,
       sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName}
       """
       }
-		} // end withCredentials
+	/*	} // end withCredentials*/
 	}
 }
