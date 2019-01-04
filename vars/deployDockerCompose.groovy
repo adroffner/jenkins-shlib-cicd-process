@@ -68,7 +68,7 @@ def call(String imageName, String remoteDirectory,
 
 	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
 
-	def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
+	/*def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
 	def addNetworkShell = 'true'
 	if (sharedNetwork != null) {
 		echo("Deployment requires shared network \"${sharedNetwork}\" ...")
@@ -80,7 +80,7 @@ def call(String imageName, String remoteDirectory,
 	if (sharedVolume != null) {
 		echo("Deployment requires shared volume \"${sharedVolume}\" ...")
 		addVolumeShell = "sudo docker volume inspect ${sharedVolume} || sudo docker volume create --name ${sharedVolume}"
-	}
+	}*/
 
 	// Set the image TAG in docker-compose YAML.
 	if (tier != 'prod') {
