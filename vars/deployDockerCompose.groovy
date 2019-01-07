@@ -55,7 +55,7 @@ def getExternalSharedVolume(String tier, String yamlFileDirectory = '.') {
 }
 
 def call(String imageName, String remoteDirectory,
-		String tier, String hostSSHCredentials = '',
+		String tier, boolean isCron = false, String hostSSHCredentials = '',
 		String serviceName = 'web',
 		String dockerCredentials = 'docker-credentials-id',
 		String yamlFileDirectory = '.') {
@@ -92,6 +92,22 @@ def call(String imageName, String remoteDirectory,
 		withCredentials([[$class: 'UsernamePasswordMultiBinding',
 			credentialsId: dockerCredentials,
 			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
+      def execCmd = """/bin/bash -c ' \\
+        sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
+        ${addNetworkShell} && \\
+        ${addVolumeShell} && \\
+        sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
+        sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
+        sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
+        """
+      if (isCron && hostSSHtarget != 'micro.prod'){
+          execCmd = """/bin/bash -c ' \\
+      sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
+      ${addNetworkShell} && \\
+      ${addVolumeShell} && \\
+      sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName}
+      """
+      }
 
 			// Use Publish Over SSH: https://jenkins.io/doc/pipeline/steps/publish-over-ssh/
 			sshPublisher(publishers: [
@@ -99,14 +115,7 @@ def call(String imageName, String remoteDirectory,
 				transfers: [
 					sshTransfer(
 					// excludes: '',
-					execCommand: """/bin/bash -c ' \\
-	sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
-	${addNetworkShell} && \\
-	${addVolumeShell} && \\
-	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
-	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml down && \\
-	sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml up -d'
-	""",
+					execCommand: execCmd,
 					execTimeout: 720000, flatten: true,
 					// makeEmptyDirs: false, noDefaultExcludes: false,
 					// patternSeparator: '[, ]+',
