@@ -14,10 +14,16 @@ def call(String imageName,
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
-	 
+	    options {
+                disableConcurrentBuilds()
+        }
 	    stages {
 		stage('Deploy Service') { 
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
+		    options {
+                retry(3)
+                timeout(time: 10, unit: 'MINUTES')
+            }
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
