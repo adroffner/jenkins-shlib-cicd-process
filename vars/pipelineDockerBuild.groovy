@@ -106,7 +106,7 @@ def call(String imageName,
     */
 
     stage('Publish Swagger Documentation') {
-        when { branch 'master'} 
+        when { branch 'bugfix/MIC-1499-hf-swagger-publish-step-not-finding-host-name-properly'} 
             steps {
                 node ("master") {
                     script {
