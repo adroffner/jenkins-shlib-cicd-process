@@ -25,8 +25,8 @@ def call(String imageName,
 
 	pipeline {
 	    agent { label "${nodeLabel}" }
-	 
 	    stages {
+      /*
 		stage('Prevent Merge Conflict') { 
 		    steps {
 			script {
@@ -103,6 +103,7 @@ def call(String imageName,
     
 		    }
 		}
+    */
 
     stage('Publish Swagger Documentation') {
         when { branch 'master'} 
@@ -122,6 +123,7 @@ def call(String imageName,
             }
     }
 	    }
+      /*
 	    post {
 		always {
 			emailBuildReport(emailReportList)
@@ -147,5 +149,6 @@ def call(String imageName,
 		    }
 		}
 	    }
+      */
 	}
 }
