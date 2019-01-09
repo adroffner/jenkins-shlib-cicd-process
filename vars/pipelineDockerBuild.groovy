@@ -121,7 +121,7 @@ def call(String imageName,
 		}
     */
     stage('Publish Swagger Documentation') {
-        when { branch 'master'}
+        when { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code'}
             steps {
                 node ("master") {
                     script {
