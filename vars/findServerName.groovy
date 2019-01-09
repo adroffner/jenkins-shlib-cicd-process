@@ -30,7 +30,7 @@ def call(serverConfig="server_config.py") {
       println("baseDir")
       println(baseDir)
       filePath = "${baseDir}${File.separator}${serverConfig}"
-      println("printing file path")
+      println("printing file pat")
       println(filePath)
       
 
