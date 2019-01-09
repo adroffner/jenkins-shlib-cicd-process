@@ -132,7 +132,7 @@ def call(String imageName,
                             // publishSwaggerJson(serverName)
                         // } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
-                            println(e.getMessage())
+                            // println(e.getMessage())
                             currentBuild.result = "UNSTABLE"
                         // }
                     }
