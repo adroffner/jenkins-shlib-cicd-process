@@ -19,6 +19,7 @@ def call(serverConfig="server_config.py") {
       println("inside find server name")
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
+      print(server_config)
       server_config_path = "${server_config[0].path}"
       println(server_config_path)
       def projectName = new File(server_config_path).parent
