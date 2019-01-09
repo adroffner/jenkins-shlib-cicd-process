@@ -21,9 +21,14 @@ def call(serverConfig="server_config.py") {
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       print(server_config)
       server_config_path = "${server_config[0].path}"
+      println("server config path")
       println(server_config_path)
       def projectName = new File(server_config_path).parent
+      println("project name")
+      println(projectName)
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
+      println("baseDir")
+      println(baseDir)
       filePath = "${baseDir}${File.separator}${serverConfig}"
       println("printing file path")
       println(filePath)
