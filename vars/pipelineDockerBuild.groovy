@@ -125,16 +125,16 @@ def call(String imageName,
             steps {
                 node ("master") {
                     script {
-                        try {
+                        // try {
                             serverName = findServerName()
                             println("server name!")
                             println(serverName)
                             // publishSwaggerJson(serverName)
-                        } catch (Exception e) {
+                        // } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
                             println(e.getMessage())
                             currentBuild.result = "UNSTABLE"
-                        }
+                        // }
                     }
                 }
             }
