@@ -22,6 +22,7 @@ def call(serverConfig="server_config.py") {
       def projectName = new File(server_config_path).parent
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
       filePath = "${baseDir}${File.separator}${serverConfig}"
+      println(filePath)
       
 
       // def server_config_contents = readFile "${filePath}"

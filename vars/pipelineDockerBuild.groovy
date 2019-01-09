@@ -30,6 +30,7 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
+        /* Disable for testing
 		stage('Prevent Merge Conflict') {
 		    steps {
 			script {
@@ -118,7 +119,7 @@ def call(String imageName,
 
 		    }
 		}
-
+    */
     stage('Publish Swagger Documentation') {
         when { branch 'master'}
             steps {
@@ -126,7 +127,7 @@ def call(String imageName,
                     script {
                         try {
                             serverName = findServerName()
-                            publishSwaggerJson(serverName)
+                            // publishSwaggerJson(serverName)
                         } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
                             println(e.getMessage())
@@ -137,6 +138,7 @@ def call(String imageName,
             }
     }
 	    }
+      /*
 	    post {
 		always {
 			emailBuildReport(emailReportList)
@@ -162,5 +164,6 @@ def call(String imageName,
 		    }
 		}
 	    }
+      */
 	}
 }
