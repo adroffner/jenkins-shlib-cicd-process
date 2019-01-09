@@ -125,7 +125,6 @@ def call(String imageName,
             steps {
                 node ("master") {
                     script {
-                      powershell "ls"
                         try {
                             serverName = findServerName()
                             println("server name!")
