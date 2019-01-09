@@ -125,6 +125,7 @@ def call(String imageName,
             steps {
                 node ("master") {
                     script {
+                      sh "pwd"
                         try {
                             serverName = findServerName()
                             println("server name!")
