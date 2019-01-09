@@ -16,6 +16,7 @@
 
 def call(serverConfig="server_config.py") {
   try {
+      println("inside find server name")
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       server_config_path = "${server_config[0].path}"
