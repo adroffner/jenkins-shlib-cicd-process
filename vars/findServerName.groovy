@@ -28,9 +28,8 @@ def call(serverConfig="server_config.py") {
       server_config_contents = new File(filePath).text
 
       // // Parse serverName (hostname and port) string from contents.
-      def serverName = "${server_config_contents}" =~ /[^'"\s]*[.]web[.][^'"\s]*:\d+/
-      serverName = serverName[0] // assume first match is right
-
+      def serverName = "${server_config_contents}" =~ /([^'"\s]*[.]web[.][^'"\s]*:(?!8100)\d+)/
+      serverName = serverName[0][0] // assume first match is right
       return serverName
   }
   catch (Exception e) {
