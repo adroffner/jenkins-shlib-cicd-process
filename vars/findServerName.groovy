@@ -48,5 +48,6 @@ def call(serverConfig="server_config.py") {
   catch (Exception e) {
       println(e.getMessage())
       currentBuild.result = "UNSTABLE"
+      throw e
   }
 }
