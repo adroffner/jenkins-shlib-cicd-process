@@ -15,7 +15,7 @@
 
 
 def call(serverConfig="server_config.py") {
-  try {
+  // try {
       println("inside find server name")
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
@@ -44,10 +44,10 @@ def call(serverConfig="server_config.py") {
       serverName = serverName[0][0] // assume first match is right
       println(serverName)
       return serverName
-  }
-  catch (Exception e) {
+  // }
+  // catch (Exception e) {
       println(e.getMessage())
       currentBuild.result = "UNSTABLE"
       throw e
-  }
+  // }
 }
