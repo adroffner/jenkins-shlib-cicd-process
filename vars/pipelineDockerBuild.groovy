@@ -37,7 +37,7 @@ def call(String imageName,
 		// 	    if ("${env.BRANCH_NAME}" == 'develop') {
 		// 	    	mergeWithBranch = 'master'
 		// 	    }
-		// 	    preventMergeConflict(mergeWithBranch)
+		// 	    // preventMergeConflict(mergeWithBranch)
 		// 	}
 		//     }
 		  //   post {
@@ -48,7 +48,7 @@ def call(String imageName,
 			// 	jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
 			// }
 		  //   }
-		}
+		// }
         /* Disable for testing
 		stage('Build Docker Image') {
 		    steps {
