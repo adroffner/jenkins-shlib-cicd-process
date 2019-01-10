@@ -38,7 +38,7 @@ def call(serverConfig="server_config.py") {
       echo "RUNNING sphinx script!"
       sh "ls && pwd"
 
-      sh "./bin/build_sphinx.sh"
+      sh "sh ./bin/build_sphinx.sh"
 
       // def server_config_contents = readFile "${filePath}"
       server_config_contents = new File(filePath).text
