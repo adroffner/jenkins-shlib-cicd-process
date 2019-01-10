@@ -20,8 +20,8 @@ def call(serverConfig="server_config.py") {
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
       print(server_config)
-      sh "ls"
-      sh "pwd"
+      // sh "ls"
+      // sh "pwd"
       server_config_path = "${server_config[0].path}"
       println("server config path")
       println(server_config_path)
