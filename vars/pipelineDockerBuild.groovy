@@ -124,6 +124,7 @@ def call(String imageName,
         when { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code'}
             steps {
                 node ("master") {
+                    checkout scm
                     script {
                         // try {
                             serverName = findServerName()
