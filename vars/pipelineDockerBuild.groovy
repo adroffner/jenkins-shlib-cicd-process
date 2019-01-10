@@ -49,7 +49,6 @@ def call(String imageName,
 			// }
 		  //   }
 		// }
-        /* Disable for testing
 		stage('Build Docker Image') {
 		    steps {
 			buildDockerImage "${imageName}"
@@ -59,6 +58,7 @@ def call(String imageName,
                 timeout(time: 10, unit: 'MINUTES')
 		    }
 		}
+        /* Disable for testing
 		stage('Run Unit Tests') {
 		    when { not { branch 'master' } }
 		    steps {
@@ -124,11 +124,9 @@ def call(String imageName,
         when { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code'}
             steps {
                 node ("master") {
-                    checkout scm
                     script {
                         // try {
                             serverName = findServerName()
-                            println("server name!")
                             println(serverName)
                             // publishSwaggerJson(serverName)
                         // } catch (Exception e) {

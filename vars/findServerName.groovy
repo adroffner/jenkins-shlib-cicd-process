@@ -19,21 +19,10 @@ def call(serverConfig="server_config.py") {
       println("inside find server name")
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
-      print(server_config)
-      // sh "ls"
-      // sh "pwd"
       server_config_path = "${server_config[0].path}"
-      println("server config path")
-      println(server_config_path)
       def projectName = new File(server_config_path).parent
-      println("project name")
-      println(projectName)
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
-      println("baseDir")
-      println(baseDir)
       filePath = "${baseDir}${File.separator}${serverConfig}"
-      println("printing file pat")
-      println(filePath)
       
       echo "RUNNING sphinx script!"
       sh "ls ./bin && pwd"
