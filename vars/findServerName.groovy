@@ -35,7 +35,7 @@ def call(serverConfig="server_config.py") {
       println("printing file pat")
       println(filePath)
       
-
+      sh "ls && pwd"
       // def server_config_contents = readFile "${filePath}"
       server_config_contents = new File(filePath).text
       println("server config contents")
