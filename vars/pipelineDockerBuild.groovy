@@ -30,16 +30,16 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
-		stage('Prevent Merge Conflict') {
-		    steps {
-			script {
-			    def mergeWithBranch = 'develop'
-			    if ("${env.BRANCH_NAME}" == 'develop') {
-			    	mergeWithBranch = 'master'
-			    }
-			    preventMergeConflict(mergeWithBranch)
-			}
-		    }
+		// stage('Prevent Merge Conflict') {
+		//     steps {
+		// 	script {
+		// 	    def mergeWithBranch = 'develop'
+		// 	    if ("${env.BRANCH_NAME}" == 'develop') {
+		// 	    	mergeWithBranch = 'master'
+		// 	    }
+		// 	    preventMergeConflict(mergeWithBranch)
+		// 	}
+		//     }
 		  //   post {
 			// fixed {
 			// 	jiraBuildReport "RESOLVED Merge Conflicts \"${env.BRANCH_NAME}\""
