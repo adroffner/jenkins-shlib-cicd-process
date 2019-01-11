@@ -4,7 +4,7 @@ def call(String imageName) {
     	sh """ sudo mkdir ${env.WORKSPACE}/docs \\
 && sudo chmod 777 ${env.WORKSPACE}/docs \\
 && sudo docker run --rm \\
-	--user="root" \\
+	--user="www-data" \\
 	--entrypoint="/home/bin/build_sphinx.sh" \\
 	--volume="${env.WORKSPACE}/docs:/home/bin/app/greta_api/documentation/_build/html" ${fullImageName}
 """
