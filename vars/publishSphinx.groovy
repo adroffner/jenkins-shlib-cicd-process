@@ -12,8 +12,7 @@ def call(String imageName) {
         && sudo docker run --rm \\
         --user="www-data" \\
         --entrypoint="/home/bin/build_sphinx.sh" \\
-        --volume="${env.WORKSPACE}/documentation:/home/app/greta_api/documentation/" ${fullImageName} \\
-        -e "COLOR=Purple" \\
+        --volume="${env.WORKSPACE}/documentation:/home/app/greta_api/documentation/" ${fullImageName} "Purple" \\
         && echo "After sudo docker run" \\
         && pwd \\
         && ls \\
