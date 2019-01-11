@@ -58,6 +58,13 @@ def call(String imageName,
                 timeout(time: 10, unit: 'MINUTES')
 		    }
 		}
+
+    stage ('Publish sphinx') {
+      steps {
+        publishSphinx("${imageName}")
+      }
+    }
+
         /* Disable for testing
 		stage('Run Unit Tests') {
 		    when { not { branch 'master' } }

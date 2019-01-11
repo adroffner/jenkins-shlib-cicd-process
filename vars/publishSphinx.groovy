@@ -1,4 +1,4 @@
-def call() {
+def call(String imageName) {
   def fullImageName = buildDockerImage.fullImageName(imageName)
   script {
     	sh """ sudo mkdir ${env.WORKSPACE}/docs \\
