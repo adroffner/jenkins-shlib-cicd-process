@@ -1,8 +1,7 @@
 def call(String imageName) {
   def fullImageName = buildDockerImage.fullImageName(imageName)
   script {
-    	sh """rmdir ${env.WORKSPACE}/documentation \\
-        && mkdir ${env.WORKSPACE}/documentation \\
+    	sh """mkdir ${env.WORKSPACE}/documentation \\
 && chmod 777 ${env.WORKSPACE}/documentation \\
 && sudo docker run --rm \\
 	--user="www-data" \\
