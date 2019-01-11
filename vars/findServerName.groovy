@@ -15,7 +15,7 @@
 
 
 def call(serverConfig="server_config.py") {
-  // try {
+  try {
       println("inside find server name")
       // Read contents of serverConfig python file.
       server_config = findFiles(glob: "**${File.separator}${serverConfig}")
@@ -28,16 +28,15 @@ def call(serverConfig="server_config.py") {
       server_config_contents = new File(filePath).text
       println("server config contents")
       println(server_config_contents)
-
       // // Parse serverName (hostname and port) string from contents.
       def serverName = "${server_config_contents}" =~ /([^'"\s]*[.]web[.][^'"\s]*:(?!8100)\d+)/
       serverName = serverName[0][0] // assume first match is right
       println(serverName)
       return serverName
-  // }
-  // catch (Exception e) {
-      // println(e.getMessage())
+  }
+  catch (Exception e) {
+      println(e.getMessage())
       currentBuild.result = "UNSTABLE"
-      // throw e
-  // }
+      throw e
+  }
 }
