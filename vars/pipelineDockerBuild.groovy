@@ -30,25 +30,25 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
-		// stage('Prevent Merge Conflict') {
-		//     steps {
-		// 	script {
-		// 	    def mergeWithBranch = 'develop'
-		// 	    if ("${env.BRANCH_NAME}" == 'develop') {
-		// 	    	mergeWithBranch = 'master'
-		// 	    }
-		// 	    // preventMergeConflict(mergeWithBranch)
-		// 	}
-		//     }
-		  //   post {
-			// fixed {
-			// 	jiraBuildReport "RESOLVED Merge Conflicts \"${env.BRANCH_NAME}\""
-			// }
-			// regression {
-			// 	jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
-			// }
-		  //   }
-		// }
+		stage('Prevent Merge Conflict') {
+		    steps {
+			script {
+			    def mergeWithBranch = 'develop'
+			    if ("${env.BRANCH_NAME}" == 'develop') {
+			    	mergeWithBranch = 'master'
+			    }
+			    // preventMergeConflict(mergeWithBranch)
+			}
+		    }
+		    post {
+			fixed {
+				jiraBuildReport "RESOLVED Merge Conflicts \"${env.BRANCH_NAME}\""
+			}
+			regression {
+				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
+			}
+		    }
+		}
 		stage('Build Docker Image') {
 		    steps {
 			buildDockerImage "${imageName}"
@@ -59,13 +59,6 @@ def call(String imageName,
 		    }
 		}
 
-    stage ('Publish sphinx') {
-      steps {
-        publishSphinx("${imageName}")
-      }
-    }
-
-        /* Disable for testing
 		stage('Run Unit Tests') {
 		    when { not { branch 'master' } }
 		    steps {
@@ -83,6 +76,13 @@ def call(String imageName,
 			}
 		    }
 		}
+
+        stage ('Publish sphinx') {
+      steps {
+        publishSphinx("${imageName}")
+      }
+    }
+    
 		stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
@@ -126,27 +126,25 @@ def call(String imageName,
 
 		    }
 		}
-    */
     stage('Publish Swagger Documentation') {
         when { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code'}
             steps {
                 node ("master") {
                     script {
-                        // try {
+                        try {
                             serverName = findServerName()
                             println(serverName)
-                            // publishSwaggerJson(serverName)
-                        // } catch (Exception e) {
+                            publishSwaggerJson(serverName)
+                        } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
-                            // println(e.getMessage())
+                            println(e.getMessage())
                             currentBuild.result = "UNSTABLE"
-                        // }
+                        }
                     }
                 }
             }
     }
 	    }
-      /*
 	    post {
 		always {
 			emailBuildReport(emailReportList)
@@ -172,6 +170,5 @@ def call(String imageName,
 		    }
 		}
 	    }
-      */
 	}
 }
