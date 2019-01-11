@@ -2,10 +2,17 @@ def call(String imageName) {
   def fullImageName = buildDockerImage.fullImageName(imageName)
   script {
       sh """
-        if [ ! -d "${env.WORKSPACE}/documentation"]; then
+        if [ ! -d "${env.WORKSPACE}/documentation" ]; then
           mkdir ${env.WORKSPACE}/documentation
         fi
       """
+
+
+      def initFile = findFiles(glob: "**${File.separator}__init__.py")
+      initFilePath = "${initFile[0].path}"
+      println(initFilePath)
+      def projectName = new File(initFilePath).parent
+      println(projectName)
 
     	sh """ 
         chmod 777 ${env.WORKSPACE}/documentation \\
