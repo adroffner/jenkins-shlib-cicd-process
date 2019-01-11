@@ -24,11 +24,6 @@ def call(serverConfig="server_config.py") {
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
       filePath = "${baseDir}${File.separator}${serverConfig}"
       
-      echo "RUNNING sphinx script!"
-      sh "ls ./bin && pwd"
-
-      sh "sh ${WORKSPACE}/bin/build_sphinx.sh"
-
       // def server_config_contents = readFile "${filePath}"
       server_config_contents = new File(filePath).text
       println("server config contents")

@@ -7,7 +7,11 @@ def call(String imageName) {
 && sudo docker run --rm \\
 	--user="www-data" \\
 	--entrypoint="/home/bin/build_sphinx.sh" \\
-	--volume="${env.WORKSPACE}/docs:/home/bin/app/greta_api/documentation/_build/html" ${fullImageName}
+	--volume="${env.WORKSPACE}/docs:/home/app/greta_api/documentation/_build/html" ${fullImageName}
+ && echo "After sudo docker run" \\
+ && pwd \\
+ && ls \\
+ && ls ${env.WORKSPACE}/docs
 """
   }
 }
