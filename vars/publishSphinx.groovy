@@ -1,3 +1,18 @@
+/*
+  Module that dynamically resolves the project folder based on the __init__.py and publishes sphinx documentation to the hosting server.
+
+  * Required Plugins:
+
+  "Pipeline Utility Steps"
+
+  Requires script approval for:
+    method java.io.File getParent
+    staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.File
+    new java.io.File java.lang.String
+    java.lang.String
+    staticField java.io.File separator
+*/
+
 def call(String imageName) {
   def fullImageName = buildDockerImage.fullImageName(imageName)
   script {
