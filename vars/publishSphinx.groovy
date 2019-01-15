@@ -25,9 +25,7 @@ def call(String imageName) {
       // Find the project directory!
       def initFile = findFiles(glob: "**${File.separator}__init__.py")
       initFilePath = "${initFile[0].path}"
-      println(initFilePath)
       def projectFolder = new File(initFilePath).parent
-      println(projectFolder)
 
     	sh """ 
         chmod 777 ${env.WORKSPACE}/documentation \\

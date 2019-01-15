@@ -127,13 +127,12 @@ def call(String imageName,
 		    }
 		}
     stage('Publish Swagger Documentation') {
-        when { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code'}
+        when { branch 'master'}
             steps {
                 node ("master") {
                     script {
                         try {
                             serverName = findServerName()
-                            println(serverName)
                             publishSwaggerJson(serverName)
                         } catch (Exception e) {
                             echo 'There was an error publishing the Swagger Json.'
