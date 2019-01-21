@@ -28,6 +28,6 @@ def call(String imageName, String dockerfileDir = './') {
 
 	// docker.build(..) errors (https://issues.jenkins-ci.org/browse/JENKINS-31507)
 	sh """ cd ${dockerfileDir} \\
-&& sudo docker build -t ${fullName} ./ \\
+&& docker build -t ${fullName} ./ \\
 && cd - """
 }
