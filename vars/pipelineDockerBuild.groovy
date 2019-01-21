@@ -75,6 +75,11 @@ def call(String imageName,
 			}
 		    }
 		}
+		stage ('Publish sphinx') {
+	      steps {
+	        publishSphinx("${imageName}")
+	      }
+	    }
 		stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
