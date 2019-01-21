@@ -40,14 +40,14 @@ def call(String imageName,
 			    preventMergeConflict(mergeWithBranch)
 			}
 		    }
-		    post {
+		    /* post {
 			fixed {
 				jiraBuildReport "RESOLVED Merge Conflicts \"${env.BRANCH_NAME}\""
 			}
 			regression {
 				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
-			}
-		    }
+			} 
+		    }*/
 		}
 		stage('Build Docker Image') {
 		    steps {
@@ -58,7 +58,6 @@ def call(String imageName,
                 timeout(time: 10, unit: 'MINUTES')
 		    }
 		}
-
 		stage('Run Unit Tests') {
 		    when { not { branch 'master' } }
 		    steps {
@@ -67,24 +66,17 @@ def call(String imageName,
 						unstableCoverageBelow,
 						failureCoverageBelow)
 		    }
-		    post {
+		    /* post {
 			fixed {
 				jiraBuildReport "RESOLVED Unit Test Suite fixed \"${env.BRANCH_NAME}\""
 			}
 			regression {
 				jiraBuildReport "ERRORS Unit Test Suite regression \"${env.BRANCH_NAME}\""
 			}
-		    }
+		    }*/
 		}
-
-        stage ('Publish sphinx') {
-      steps {
-        publishSphinx("${imageName}")
-      }
-    }
-    
 		stage('Push Docker Image') {
-		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
+		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
             options {
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
@@ -94,7 +86,7 @@ def call(String imageName,
 		    }
 		}
 		stage('Deploy Service') {
-		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
+		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
             options {
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
@@ -102,11 +94,11 @@ def call(String imageName,
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
-				case 'develop': // QA Deployment
+				case 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code': // QA Deployment
 					tier = 'dev'
 					break
 
-				case 'master': // Production "latest" deployment
+				/*case 'master': // Production "latest" deployment
 					tier = 'prod'
 					break
 
@@ -118,7 +110,7 @@ def call(String imageName,
 					else {
 						error("INVALID DEPLOYMENT: \"${env.BRANCH_NAME}\" is not a deployment branch!")
                     			}
-				}
+				}*/
 
 				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
 				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier, isCron)
@@ -126,7 +118,8 @@ def call(String imageName,
 
 		    }
 		}
-    stage('Publish Swagger Documentation') {
+
+    /*stage('Publish Swagger Documentation') {
         when { branch 'master'}
             steps {
                 node ("master") {
@@ -168,6 +161,7 @@ def call(String imageName,
 			cleanUpDocker("${imageName}", tier)
 		    }
 		}
-	    }
+	    }*/
 	}
+}
 }
