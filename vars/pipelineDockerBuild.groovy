@@ -76,7 +76,7 @@ def call(String imageName,
 		    }
 		}
 		stage('Push Docker Image') {
-		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
@@ -86,7 +86,7 @@ def call(String imageName,
 		    }
 		}
 		stage('Deploy Service') {
-		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
+		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {
                 retry(3)
                 timeout(time: 10, unit: 'MINUTES')
@@ -94,7 +94,7 @@ def call(String imageName,
 		    steps {
 			script {
 				switch ("${env.BRANCH_NAME}") {
-				case 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code': // QA Deployment
+				case 'develop': // QA Deployment
 					tier = 'dev'
 					break
 
