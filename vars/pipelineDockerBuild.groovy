@@ -30,7 +30,7 @@ def call(String imageName,
                 disableConcurrentBuilds()
         }
 	    stages {
-		stage('Prevent Merge Conflict') {
+		/*stage('Prevent Merge Conflict') {
 		    steps {
 			script {
 			    def mergeWithBranch = 'develop'
@@ -40,15 +40,15 @@ def call(String imageName,
 			    preventMergeConflict(mergeWithBranch)
 			}
 		    }
-		    /* post {
+		    post {
 			fixed {
 				jiraBuildReport "RESOLVED Merge Conflicts \"${env.BRANCH_NAME}\""
 			}
 			regression {
 				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
 			} 
-		    }*/
-		}
+		    }
+		}*/
 		stage('Build Docker Image') {
 		    steps {
 			buildDockerImage "${imageName}"
