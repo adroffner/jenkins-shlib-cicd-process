@@ -58,14 +58,14 @@ def call(String imageName,
                 timeout(time: 10, unit: 'MINUTES')
 		    }
 		}
-		stage('Run Unit Tests') {
+		/*stage('Run Unit Tests') {
 		    when { not { branch 'master' } }
 		    steps {
 			runUnitTestsDockerImage("${imageName}",
 						healthyCoverageAbove,
 						unstableCoverageBelow,
 						failureCoverageBelow)
-		    }
+		    }*/
 		    /* post {
 			fixed {
 				jiraBuildReport "RESOLVED Unit Test Suite fixed \"${env.BRANCH_NAME}\""
@@ -73,9 +73,14 @@ def call(String imageName,
 			regression {
 				jiraBuildReport "ERRORS Unit Test Suite regression \"${env.BRANCH_NAME}\""
 			}
-		    }*/
-		}
-		stage('Push Docker Image') {
+		    }
+		}*/
+		stage ('Publish sphinx') {
+	      steps {
+	        publishSphinx("${imageName}")
+	      }
+	    }
+		/*stage('Push Docker Image') {
 		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
             options {
                 retry(3)
@@ -84,7 +89,7 @@ def call(String imageName,
 		    steps {
 			pushDockerImage "${imageName}"
 		    }
-		}
+		}*/
 		stage('Deploy Service') {
 		    when { anyOf { branch 'feature/INC-2328-jenkins-builds-create-python-sphinx-documentation-from-code' } }
             options {
