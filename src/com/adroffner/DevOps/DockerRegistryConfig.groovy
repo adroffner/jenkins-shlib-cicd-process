@@ -3,12 +3,12 @@
  * This file stores the private Docker registry configuration constants.
  **/
 
-package com.att.gcsBizOps;
+package com.adroffner.DevOps;
 
 class DockerRegistryConfig {
 	// Private Docker Registry for Incubate Team
-	static final String DOCKER_REGISTRY_URL = 'https://dockercentral.it.att.com:5100'
-	static final String DOCKER_NAMESPACE = 'dockercentral.it.att.com:5100/com.att.dev.argos'
+	static final String DOCKER_REGISTRY_URL = 'https://dockercentral.it.adroffner.com:5100'
+	static final String DOCKER_NAMESPACE = 'dockercentral.it.adroffner.com:5100/com.adroffner.dev.argos'
 
 	// NOTE: DOCKER_CRED_ID matches Jenkins Global credentials-ID.
 	// See Docker Workflow Pipeline Plugin for help.

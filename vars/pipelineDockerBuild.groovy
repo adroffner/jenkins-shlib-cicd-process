@@ -17,7 +17,7 @@
 
 
 def call(String imageName,
-	 emailReportList = ['ad718x@att.com', 'pb4301@att.com'],
+	 emailReportList = ['ad718x@adroffner.com', 'pb4301@adroffner.com'],
 	 nodeLabel = 'microservices',
 	 int healthyCoverageAbove = 85,
 	 int unstableCoverageBelow = 85,
@@ -112,7 +112,7 @@ def call(String imageName,
                     			}
 				}
 
-				def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
+				def dockerConf = new com.adroffner.DevOps.DockerRegistryConfig()
 				deployDockerCompose("${imageName}", "${dockerConf.DOCKER_COMPOSE_DIR}", tier, isCron)
 			}
 

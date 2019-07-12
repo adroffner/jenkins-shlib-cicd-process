@@ -66,7 +66,7 @@ def call(String imageName, String remoteDirectory,
 			+ serverTierOptions().join(', ') + ")")
 	}
 
-	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
+	def dockerConf = new com.adroffner.DevOps.DockerRegistryConfig()
 
 	def sharedNetwork = getExternalSharedNetwork(tier, yamlFileDirectory)
 	def addNetworkShell = 'true'
@@ -93,7 +93,7 @@ def call(String imageName, String remoteDirectory,
 			credentialsId: dockerCredentials,
 			usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS']]) {
       def execCmd = """/bin/bash -c ' \\
-        sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
+        sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@adroffner.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
         ${addNetworkShell} && \\
         ${addVolumeShell} && \\
         sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName} && \\
@@ -102,7 +102,7 @@ def call(String imageName, String remoteDirectory,
         """
       if (isCron && tier == 'prod' && hostSSHtarget != 'micro.prod'){
           execCmd = """/bin/bash -c ' \\
-      sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@att.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
+      sudo docker login -u ${env.DOCKER_USER} -p ${env.DOCKER_PASS} -e nobody@adroffner.com ${dockerConf.DOCKER_REGISTRY_URL} && \\
       ${addNetworkShell} && \\
       ${addVolumeShell} && \\
       sudo docker-compose -f ${remoteDirectory}/${imageName}/docker-compose-${tier}.yml pull ${serviceName}
@@ -116,9 +116,9 @@ def call(String imageName, String remoteDirectory,
 					sshTransfer(
 					// excludes: '',
 					execCommand: execCmd,
-					execTimeout: 720000, flatten: true,
+					execTimeout: 720000, fladroffneren: true,
 					// makeEmptyDirs: false, noDefaultExcludes: false,
-					// patternSeparator: '[, ]+',
+					// padroffnerernSeparator: '[, ]+',
 					remoteDirectory: "${imageName}",  // Relative to param remoteDirectory
 					// remoteDirectorySDF: false, removePrefix: '',
 					sourceFiles: "docker-compose-${tier}.yml")],
