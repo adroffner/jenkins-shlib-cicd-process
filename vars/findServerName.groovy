@@ -23,8 +23,10 @@ def call(serverConfig="server_config.py") {
       baseDir = "${env.WORKSPACE}${File.separator}${projectName}"
       filePath = "${baseDir}${File.separator}${serverConfig}"
       
+
       // def server_config_contents = readFile "${filePath}"
       server_config_contents = new File(filePath).text
+
       // // Parse serverName (hostname and port) string from contents.
       def serverName = "${server_config_contents}" =~ /([^'"\s]*[.]web[.][^'"\s]*:(?!8100)\d+)/
       serverName = serverName[0][0] // assume first match is right

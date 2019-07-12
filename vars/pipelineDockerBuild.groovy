@@ -37,7 +37,7 @@ def call(String imageName,
 			    if ("${env.BRANCH_NAME}" == 'develop') {
 			    	mergeWithBranch = 'master'
 			    }
-			    // preventMergeConflict(mergeWithBranch)
+			    preventMergeConflict(mergeWithBranch)
 			}
 		    }
 		    post {
@@ -46,7 +46,7 @@ def call(String imageName,
 			}
 			regression {
 				jiraBuildReport "FOUND Merge Conflicts promoting \"${env.BRANCH_NAME}\""
-			} 
+			}
 		    }
 		}
 		stage('Build Docker Image') {
@@ -75,11 +75,6 @@ def call(String imageName,
 			}
 		    }
 		}
-		stage ('Publish sphinx') {
-	      steps {
-	        publishSphinx("${imageName}")
-	      }
-	    }
 		stage('Push Docker Image') {
 		    when { anyOf { branch 'develop'; branch 'master'; branch 'release/*' } }
             options {

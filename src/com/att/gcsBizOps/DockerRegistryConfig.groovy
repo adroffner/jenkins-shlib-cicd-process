@@ -17,5 +17,5 @@ class DockerRegistryConfig {
 	// SSH Publish Plugin Target Directory.
 	// docker-compose Directory on remote deployment
 	// TODO: Can we introspect this for the SSH Publish Plugin's config?
-	static final String DOCKER_COMPOSE_DIR = '/home/ad718x/test-docker-deploy'
+	static final String DOCKER_COMPOSE_DIR = '/home/m12292/docker-deploy'
 }

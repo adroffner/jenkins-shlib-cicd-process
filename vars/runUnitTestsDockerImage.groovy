@@ -52,7 +52,7 @@ def call(String imageName,
 
 			sh """ mkdir ${env.WORKSPACE}/test-reports \\
 && chmod 777 ${env.WORKSPACE}/test-reports \\
-&& docker run --rm \\
+&& sudo docker run --rm \\
 	--user="${username}" \\
 	--entrypoint="/home/bin/run_tests.sh" \\
 	--volume="${env.WORKSPACE}/test-reports:/tmp/test-reports" ${fullImageName}
