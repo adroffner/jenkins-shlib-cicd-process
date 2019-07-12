@@ -3,16 +3,16 @@ Jenkins Pipeline: Shared Libraries Groovy Source Code
 
 This **Groovy script** source code loads into an [extended shared libraries](https://jenkins.io/doc/book/pipeline/shared-libraries/) project.
 
-GCS BizOps Development
+Continuous Development
 ----------------------
 
-The **Incubate BizOps** development team uses **extended shared library** to implement **CI/CD pipeline** steps. This code greatly simplifies writing **Jenkisfile** build scripts in each **Git repository**.
+A **Continuous Development** team uses **extended shared library** to implement **CI/CD pipeline** steps. This code greatly simplifies writing **Jenkisfile** build scripts in each **Git repository**.
 
-### The GCS BizOps Classpath
+### The adroffner.DevOps Classpath
 
 **Groovy** is an interpreted language thar runs on the **JVM**. This library has a **classpath** or _namespace_.
 
-* Classpath: **com.att.gcsBizOps**
+* Classpath: **com.adroffner.DevOps**
 
 References
 ----------

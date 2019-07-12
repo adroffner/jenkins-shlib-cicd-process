@@ -23,7 +23,7 @@ def jsonParse(def json) {
 }
 
 def swaggerHost() {
-  return "http://micro.web.att.com:8045"
+  return "http://micro.web.adroffner.com:8045"
 }
 
 def postRestAPI(url, inputPayload) {

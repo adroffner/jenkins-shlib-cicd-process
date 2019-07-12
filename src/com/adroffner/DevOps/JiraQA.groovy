@@ -11,7 +11,7 @@
  * Required Plugins: Git Plugin, JIRA Steps Plugin
  **/
 
-package com.att.gcsBizOps;
+package com.adroffner.DevOps;
 
 def getTicketIdFromBranch(String branch) {
 	// Get JIRA Ticket-ID from Git Branch.

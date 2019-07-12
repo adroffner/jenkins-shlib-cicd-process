@@ -10,7 +10,7 @@
 
 def call(String commentText) {
     node {
-	def jira_qa = new com.att.gcsBizOps.JiraQA()
+	def jira_qa = new com.adroffner.DevOps.JiraQA()
 	jira_qa.commentInTicket(commentText)
     }
 }

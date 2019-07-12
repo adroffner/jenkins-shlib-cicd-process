@@ -98,7 +98,7 @@ def call(String imageName,
 			warnings(
 				parserConfigurations: [[
 					parserName: 'Pep8',
-					pattern: '**/flake8.log'
+					padroffnerern: '**/flake8.log'
 				]],
 				canRunOnFailed: true,
 				unstableTotalAll: '0', // unstable when even one warning.

@@ -8,7 +8,7 @@
  */
 
 def fullImageName(String imageName) {
-	def dockerConf = new com.att.gcsBizOps.DockerRegistryConfig()
+	def dockerConf = new com.adroffner.DevOps.DockerRegistryConfig()
 	def dockerNamespace = dockerConf.DOCKER_NAMESPACE
 	def imageNameGitTag = "${dockerNamespace}/${imageName}:${env.BUILD_ID}_${env.GIT_COMMIT}"
 	return imageNameGitTag
