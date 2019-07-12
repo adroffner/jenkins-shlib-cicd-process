@@ -13,13 +13,13 @@
 def serverTierHosts() {
     // Map tier to list of "Publish Over SSH" host credentials in Jenkins.
     return [
-        dev:   ['micro.dev'],
-        stage: ['micro.stage'],
+        dev:   ['dev-server'],
+        stage: ['stage-server'],
         prod:  [
             // production load-balance cluster
-	    'micro.prod', 'micro.prod.04',
-            // disaster recovery servers
-            'micro.dr',
+	    'prod01-server', 'prod02-server',
+            // disaster recovery server(s)
+            'dr01-server',
         ]
     ]
 }

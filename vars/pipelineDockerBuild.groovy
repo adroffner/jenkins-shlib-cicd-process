@@ -118,7 +118,7 @@ def call(String imageName,
 
 		    }
 		}
-
+    /** SKIP
     stage('Publish Swagger Documentation') {
         when { branch 'master'}
             steps {
@@ -135,7 +135,7 @@ def call(String imageName,
                     }
                 }
             }
-    }
+    } **/
 	    }
 	    post {
 		always {

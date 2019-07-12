@@ -8,7 +8,7 @@ package com.adroffner.DevOps;
 class DockerRegistryConfig {
 	// Private Docker Registry for Incubate Team
 	static final String DOCKER_REGISTRY_URL = 'https://dockercentral.it.adroffner.com:5100'
-	static final String DOCKER_NAMESPACE = 'dockercentral.it.adroffner.com:5100/com.adroffner.dev.argos'
+	static final String DOCKER_NAMESPACE = 'dockercentral.it.adroffner.com:5100/com.adroffner.docker'
 
 	// NOTE: DOCKER_CRED_ID matches Jenkins Global credentials-ID.
 	// See Docker Workflow Pipeline Plugin for help.
@@ -17,5 +17,5 @@ class DockerRegistryConfig {
 	// SSH Publish Plugin Target Directory.
 	// docker-compose Directory on remote deployment
 	// TODO: Can we introspect this for the SSH Publish Plugin's config?
-	static final String DOCKER_COMPOSE_DIR = '/home/m12292/docker-deploy'
+	static final String DOCKER_COMPOSE_DIR = '/home/adroffner/docker-deploy'
 }
